@@ -50,6 +50,7 @@ AXIS_BEARING = 45.0     # start(SW) -> buoys(NE)
 CROSS_FETCH  = 300.0    # m, effective cross-axis fetch
 BUOYS_FETCH  = 1200.0   # m, fetch to the far turn
 G            = 9.81
+GUST_FACTOR  = 1.5      # estimated gust = sustained * GUST_FACTOR (matches the technical meteogram's RDPS gust line)
 
 GEOMET = "https://geo.weather.gc.ca/geomet"
 RDPS_LAYERS = {
@@ -170,13 +171,14 @@ def flag(spd):
 def compass(d):
     return ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"][round((d%360)/22.5)%16]
 
-def metrics(spd, f):
+def metrics(spd, f, gust=None):
     if spd is None or f is None: return {}
     adj = spd * south_shadow(f)
     along, cross = decompose(adj, f)
+    adj_gust = gust * south_shadow(f) if gust is not None else adj * GUST_FACTOR
     return {"raw": round(spd), "adj": round(adj), "dir": f, "card": compass(f),
             "hs": round(wave_hs(adj/3.6, eff_fetch(BUOYS_FETCH, f)) * 100),
-            "cross": round(cross), "rel": relword(along, cross, adj)}
+            "cross": round(cross), "rel": relword(along, cross, adj), "gust": round(adj_gust)}
 
 # ---------------------------------------------------------------- build json
 def build(times, rdps, twc):
@@ -200,8 +202,8 @@ def build(times, rdps, twc):
         o = {"utc": d0["utc"], "ndt": d0["ndt"], "day": d0["day"], "hour": d0["hour"],
              "dow": d0["dow"], "emoji": d0["twc"]["emoji"], "phrase": d0["twc"]["phrase"],
              "pop": d0["twc"]["pop"], "tw_temp": d0["twc"]["temp"], "rd_temp": d0["rdps"]["temp"]}
-        o["twc"]  = metrics(d0["twc"]["wspd"], d0["twc"]["wdir"])    # kept for the wave-comparison line
-        o["rdps"] = metrics(d0["rdps"]["wspd"], d0["rdps"]["wdir"])
+        o["twc"]  = metrics(d0["twc"]["wspd"], d0["twc"]["wdir"], d0["twc"]["gust"])    # kept for the wave-comparison line
+        o["rdps"] = metrics(d0["rdps"]["wspd"], d0["rdps"]["wdir"], d0["rdps"]["gust"])
         R = o["rdps"]                                                # FLAG driven by RDPS wind
         o["adj_worst"] = R.get("adj", 0)
         o["dir_card"]  = R.get("card", "–")
