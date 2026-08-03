@@ -150,6 +150,35 @@
 
   footer{margin-top:28px;color:var(--muted);font-size:12.5px;line-height:1.65}
   footer b{color:var(--ink)} code{font-family:var(--mono);font-size:.92em}
+
+  /* FAQ helper */
+  .faqBtn{position:fixed;right:20px;bottom:20px;z-index:40;width:56px;height:56px;border-radius:50%;
+    background:var(--water);color:#fff;border:none;box-shadow:0 4px 16px rgba(14,22,24,.28);
+    font-size:24px;cursor:pointer;display:grid;place-items:center;line-height:1}
+  .faqBtn:hover{filter:brightness(1.08)}
+  .faqPanel{position:fixed;right:20px;bottom:86px;z-index:40;width:min(340px,calc(100vw - 40px));
+    max-height:min(520px,calc(100vh - 120px));background:var(--surface);border:1px solid var(--hair);
+    border-radius:16px;box-shadow:0 12px 40px rgba(14,22,24,.28);display:none;flex-direction:column;
+    overflow:hidden}
+  .faqPanel.open{display:flex}
+  .faqHead{padding:14px 16px;border-bottom:1px solid var(--hair);display:flex;align-items:center;
+    justify-content:space-between;background:var(--panel)}
+  .faqHead b{font-size:14px}
+  .faqHead span{font-size:11.5px;color:var(--muted);font-family:var(--mono)}
+  .faqClose{background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;line-height:1;padding:2px 4px}
+  .faqBody{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+  .faqMsg{max-width:88%;padding:9px 12px;border-radius:12px;font-size:13.5px;line-height:1.5}
+  .faqMsg.bot{background:var(--panel);align-self:flex-start;border-bottom-left-radius:4px}
+  .faqMsg.user{background:var(--water);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+  .faqChips{display:flex;flex-wrap:wrap;gap:6px;padding:0 16px 12px}
+  .faqChip{font:inherit;font-size:12px;background:var(--panel);border:1px solid var(--hair);color:var(--ink);
+    border-radius:20px;padding:6px 12px;cursor:pointer;text-align:left}
+  .faqChip:hover{border-color:var(--water)}
+  .faqInputRow{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--hair)}
+  .faqInputRow input{flex:1;font:inherit;font-size:13.5px;border:1px solid var(--hair);border-radius:10px;
+    padding:8px 11px;background:var(--surface);color:var(--ink)}
+  .faqInputRow button{font:inherit;font-weight:650;background:var(--water);color:#fff;border:none;
+    border-radius:10px;padding:0 14px;cursor:pointer}
 </style>
 
 <div class="wrap">
@@ -228,6 +257,20 @@
   </details>
 
   <footer id="foot"></footer>
+</div>
+
+<button class="faqBtn" id="faqBtn" aria-label="Open FAQ helper" aria-expanded="false">💬</button>
+<div class="faqPanel" id="faqPanel" role="dialog" aria-label="Regatta forecast FAQ">
+  <div class="faqHead">
+    <div><b>Ask about the forecast</b><br><span>Quick answers, no live chat</span></div>
+    <button class="faqClose" id="faqClose" aria-label="Close">×</button>
+  </div>
+  <div class="faqBody" id="faqBody"></div>
+  <div class="faqChips" id="faqChips"></div>
+  <div class="faqInputRow">
+    <input type="text" id="faqInput" placeholder="Ask a question…" autocomplete="off">
+    <button id="faqSend">Ask</button>
+  </div>
 </div>
 
 <script>
@@ -454,4 +497,76 @@ document.getElementById("foot").innerHTML=
   `Wave heights are a fetch-limited estimate (<code>scripts/quidi_vidi_waves.py</code>) at the 1.2 km turn. `+
   `<b>Thresholds:</b> Green ≤20, Yellow 20–30, Red &gt;30 km/h sustained. About a day out — treat as an outlook and `+
   `re-check as race day nears (HRDPS now covers ${DAY_META.map(d=>d.label).join(" & ")}). Not an official race-day decision.`;
+
+// ---------- FAQ helper (canned Q&A, no external calls) ----------
+(function(){
+  const FAQ = [
+    {q:"What do the flag colours mean?", kw:["flag","color","colour","mean","green","yellow","red"],
+      a:()=>`<b>GREEN</b> (≤20 km/h) is good to row, <b>YELLOW</b> (20–30 km/h) is caution/marginal, and <b>RED</b> (&gt;30 km/h sustained) is the committee's hold threshold.`},
+    {q:"How is the flag calculated?", kw:["calculat","how is","determine","rdps","set the flag","how does"],
+      a:()=>`The flag reads the <b>ECCC RDPS</b> sustained wind at the lake, adjusted for a local south-shadow correction (winds from due south are discounted since the lake sits in the lee of the hills). The Weather Company supplies sky, temperature and shower chance — it doesn't drive the flag.`},
+    {q:"What's the status right now?", kw:["today","current","now","status","conditions","right now"],
+      a:()=>`${DAY_META[activeDay].label}'s flag is currently <b>${dayWorst(activeDay).toUpperCase()}</b>. Tap the tabs above the timeline to check the other race day.`},
+    {q:"Which days does this cover?", kw:["which day","what day","race day","when is the regatta","days does"],
+      a:()=>`This page covers <b>${DAY_META.map(d=>d.label).join(" and ")}</b> — use the tabs to switch between them.`},
+    {q:"What timezone are the times in?", kw:["timezone","time zone","ndt","what time","local time"],
+      a:()=>`All times shown are <b>Newfoundland Daylight (NDT, UTC−2:30)</b>.`},
+    {q:"Why is south wind treated differently?", kw:["south","shadow","discount"],
+      a:()=>`Quidi Vidi Lake sits in the lee of the surrounding hills for winds from due south, and the models tend to over-forecast them there. Only winds from the south sector (within about ±30° of due south) get discounted — every other direction is taken at face value.`},
+    {q:"What does the ⚠ warning mean?", kw:["warning","triangle","⚠","down-course","down course","down the course"],
+      a:()=>`It flags a <b>down-the-course westerly</b> — even when the speed alone would be green, that wind direction builds the worst chop at the turn buoys and turns the home leg into a headwind.`},
+    {q:"How often is this updated?", kw:["update","how often","refresh","rebuild","stale"],
+      a:()=>`The page rebuilds automatically four times a day (a few hours after each ECCC RDPS model run) and only republishes when the forecast actually changes.`},
+    {q:"Is this an official race-day decision?", kw:["official","decision","cancel","cancelled","postpone"],
+      a:()=>`No — treat this as an outlook, not an official call. Race-day go/no-go decisions are made by the committee on site.`},
+    {q:"Who built this?", kw:["who made","who built","sheerrweather","built by","credit"],
+      a:()=>`Built by <a href="https://www.sheerrweather.ca" target="_blank" rel="noopener">SheerrWeather</a>.`}
+  ];
+
+  const btn=document.getElementById("faqBtn"), panel=document.getElementById("faqPanel"),
+        closeBtn=document.getElementById("faqClose"), body=document.getElementById("faqBody"),
+        chips=document.getElementById("faqChips"), input=document.getElementById("faqInput"),
+        send=document.getElementById("faqSend");
+
+  function addMsg(text, who){
+    const m=document.createElement("div"); m.className="faqMsg "+who; m.innerHTML=text;
+    body.appendChild(m); body.scrollTop=body.scrollHeight;
+  }
+  function renderChips(){
+    chips.innerHTML="";
+    FAQ.slice(0,4).forEach(item=>{
+      const c=document.createElement("button"); c.type="button"; c.className="faqChip"; c.textContent=item.q;
+      c.onclick=()=>ask(item.q, item);
+      chips.appendChild(c);
+    });
+  }
+  function bestMatch(text){
+    const t=text.toLowerCase();
+    let best=null, bestScore=0;
+    FAQ.forEach(item=>{
+      let score=0;
+      item.kw.forEach(k=>{ if(t.includes(k)) score+=k.length; });
+      if(t.includes(item.q.toLowerCase())) score+=50;
+      if(score>bestScore){ bestScore=score; best=item; }
+    });
+    return bestScore>0?best:null;
+  }
+  function ask(text, knownItem){
+    addMsg(text, "user");
+    const item=knownItem||bestMatch(text);
+    if(item){ addMsg(item.a(), "bot"); }
+    else{ addMsg("I don't have a canned answer for that — try one of the quick questions below, or scroll the page for the full methodology in the footer.", "bot"); }
+  }
+  btn.onclick=()=>{
+    const open=panel.classList.toggle("open");
+    btn.setAttribute("aria-expanded", open);
+    if(open && !body.childElementCount){
+      addMsg("Hi! I can answer quick questions about how this forecast works. Try a question below, or type your own.", "bot");
+      renderChips();
+    }
+  };
+  closeBtn.onclick=()=>{ panel.classList.remove("open"); btn.setAttribute("aria-expanded","false"); };
+  send.onclick=()=>{ const v=input.value.trim(); if(!v)return; input.value=""; ask(v); };
+  input.addEventListener("keydown", e=>{ if(e.key==="Enter") send.onclick(); });
+})();
 </script>
