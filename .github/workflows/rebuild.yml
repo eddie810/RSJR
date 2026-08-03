@@ -1,0 +1,45 @@
+name: Rebuild regatta forecast
+
+on:
+  schedule:
+    # 04:00, 10:00, 16:00, 22:00 UTC — a few hours after each RDPS run
+    # (00/06/12/18Z) is typically published on GeoMet.
+    - cron: '0 4,10,16,22 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rebuild
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Rebuild forecast
+        env:
+          TWC_API_KEY: ${{ secrets.TWC_API_KEY }}
+        run: python build.py
+
+      - name: Publish page copy for GitHub Pages
+        run: cp regatta_meteogram.html index.html
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "regatta-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to publish."
+          else
+            git commit -m "Auto-rebuild: $(date -u +'%Y-%m-%d %H:%MZ')"
+            git push
+          fi

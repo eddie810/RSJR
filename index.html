@@ -1,0 +1,403 @@
+<title>Quidi Vidi Regatta Rowing Flag — Saturday</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --page:#e9edec; --surface:#fbfcfc; --panel:#f3f6f5;
+    --ink:#0e1618; --muted:#5c6a6c; --faint:#8b9799;
+    --grid:#e2e7e6; --axis:#c2caca; --hair:rgba(14,22,24,.10);
+    --twc:#2a78d6; --rdps:#eb6834; --gust:#9aa6a7;
+    --green:#1a8f3c; --yellow:#c07f00; --red:#cc2f2f;
+    --water:#6f97b8; --cloud:#9fb9d6; --pop:#66a0e6;
+    --band:rgba(42,120,214,.06); --row:rgba(42,120,214,.10);
+    --font:system-ui,-apple-system,"Segoe UI",sans-serif;
+    --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme:dark){:root{
+    --page:#0b0f11; --surface:#141b1e; --panel:#101619;
+    --ink:#eaf1f0; --muted:#93a2a3; --faint:#6f7e80;
+    --grid:#222e31; --axis:#33454a; --hair:rgba(255,255,255,.10);
+    --twc:#3d8bee; --rdps:#e0693a; --gust:#5c6a6c;
+    --green:#3fbf63; --yellow:#e6a92b; --red:#e8615f;
+    --water:#4d7597; --cloud:#3f5d80; --pop:#3f6fa8;
+    --band:rgba(61,139,238,.09); --row:rgba(61,139,238,.13);
+  }}
+  :root[data-theme="dark"]{
+    --page:#0b0f11; --surface:#141b1e; --panel:#101619;
+    --ink:#eaf1f0; --muted:#93a2a3; --faint:#6f7e80;
+    --grid:#222e31; --axis:#33454a; --hair:rgba(255,255,255,.10);
+    --twc:#3d8bee; --rdps:#e0693a; --gust:#5c6a6c;
+    --green:#3fbf63; --yellow:#e6a92b; --red:#e8615f;
+    --water:#4d7597; --cloud:#3f5d80; --pop:#3f6fa8;
+    --band:rgba(61,139,238,.09); --row:rgba(61,139,238,.13);
+  }
+  :root[data-theme="light"]{
+    --page:#e9edec; --surface:#fbfcfc; --panel:#f3f6f5;
+    --ink:#0e1618; --muted:#5c6a6c; --faint:#8b9799;
+    --grid:#e2e7e6; --axis:#c2caca; --hair:rgba(14,22,24,.10);
+    --twc:#2a78d6; --rdps:#eb6834; --gust:#9aa6a7;
+    --green:#1a8f3c; --yellow:#c07f00; --red:#cc2f2f;
+    --water:#6f97b8; --cloud:#9fb9d6; --pop:#66a0e6;
+    --band:rgba(42,120,214,.06); --row:rgba(42,120,214,.10);
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  body{margin:0;background:var(--page);color:var(--ink);font-family:var(--font);
+    -webkit-text-size-adjust:100%;text-size-adjust:100%;
+    line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:clamp(18px,3vw,40px)}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--water);margin:0 0 6px}
+  h1{font-size:clamp(23px,3.3vw,33px);line-height:1.12;margin:0 0 8px;text-wrap:balance;letter-spacing:-.01em}
+  .sub{color:var(--muted);margin:0;max-width:64ch;font-size:15px}
+  .runmeta{font-family:var(--mono);font-size:12px;color:var(--faint);margin-top:10px;
+    display:flex;flex-wrap:wrap;gap:6px 18px}
+  h2{font-size:15px;letter-spacing:.02em;margin:34px 0 12px;color:var(--ink)}
+  h2 .n{font-family:var(--mono);color:var(--faint);margin-right:8px;font-size:13px}
+
+  /* flag hero */
+  .hero{margin:22px 0 6px;border-radius:16px;padding:22px 24px;border:1px solid var(--hair);
+    display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;
+    background:var(--surface)}
+  .hero.green{background:color-mix(in srgb,var(--green) 12%,var(--surface));
+    border-color:color-mix(in srgb,var(--green) 40%,transparent)}
+  .hero.yellow{background:color-mix(in srgb,var(--yellow) 14%,var(--surface));
+    border-color:color-mix(in srgb,var(--yellow) 45%,transparent)}
+  .hero.red{background:color-mix(in srgb,var(--red) 13%,var(--surface));
+    border-color:color-mix(in srgb,var(--red) 45%,transparent)}
+  .lamp{width:74px;height:74px;border-radius:50%;display:grid;place-items:center;
+    font-family:var(--mono);font-size:12px;font-weight:700;color:#fff;letter-spacing:.02em;
+    box-shadow:0 0 0 6px color-mix(in srgb,currentColor 18%,transparent)}
+  .lamp.green{background:var(--green);color:var(--green)} .lamp.yellow{background:var(--yellow);color:var(--yellow)}
+  .lamp.red{background:var(--red);color:var(--red)}
+  .lamp span{color:#fff}
+  .hero .big{font-size:22px;font-weight:700;letter-spacing:-.01em;margin:0 0 4px}
+  .hero p{margin:0;font-size:14.5px;color:var(--ink)}
+  .hero b{font-weight:650}
+  .caveat{font-size:12.5px;color:var(--muted);margin-top:8px}
+
+  /* hourly timeline */
+  .tl-scroll{border:1px solid var(--hair);border-radius:14px;overflow:hidden}
+  .tl{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--grid)}
+  .hr{padding:12px 8px 14px;text-align:center;background:var(--surface);color:var(--ink);position:relative}
+    .hr .bar{height:6px;border-radius:3px;margin:0 6px 8px}
+  .hr.green .bar{background:var(--green)} .hr.yellow .bar{background:var(--yellow)} .hr.red .bar{background:var(--red)}
+  .hr .t{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+  .hr .wx{font-size:17px;line-height:1.1;margin:2px 0}
+  .hr .tmp{font-size:13px;font-weight:650;color:var(--ink);line-height:1.15;margin-bottom:1px}
+  .hr .spd{font-size:15px;font-weight:650;color:var(--ink);font-variant-numeric:tabular-nums}
+  .hr .spd small{font-size:10px;font-weight:500;color:var(--muted)}
+  .hr .dir{font-size:12px;font-weight:650;color:var(--ink);font-family:var(--mono);letter-spacing:.02em}
+  .hr .rel{font-size:10px;color:var(--muted);font-family:var(--mono);letter-spacing:.02em}
+  .hr .warn{font-size:10px;color:var(--red);font-weight:600;margin-top:2px;min-height:13px}
+  .hr .pop{font-size:10px;color:var(--pop);font-family:var(--mono)}
+  .hr svg{display:block;margin:3px auto 1px}
+  .hr.now{background:color-mix(in srgb,var(--water) 8%,transparent)}
+
+  .rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 0}
+  .rule{background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:14px 16px;
+    display:flex;gap:12px;align-items:flex-start}
+  .rule .chip{width:16px;height:16px;border-radius:5px;flex:none;margin-top:2px}
+  .rule.g .chip{background:var(--green)} .rule.y .chip{background:var(--yellow)} .rule.r .chip{background:var(--red)}
+  .rule .k{font-weight:650;font-size:14px} .rule .d{font-size:12.5px;color:var(--muted);margin-top:2px}
+
+  .notecard{background:var(--panel);border:1px solid var(--hair);border-radius:12px;padding:14px 18px;
+    font-size:13.5px;color:var(--ink);margin:12px 0}
+  .notecard b{font-weight:650} .notecard .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--water);display:block;margin-bottom:5px}
+
+  .coursewrap{background:var(--surface);border:1px solid var(--hair);border-radius:14px;padding:16px 18px}
+  .courselab{font-size:12.5px;color:var(--muted);margin-top:10px}
+  .courselab b{color:var(--ink)}
+
+  .chart-scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--hair);border-radius:14px;padding:8px}
+  svg.wave{display:block;width:100%;min-width:600px;height:auto}
+  .grid-line{stroke:var(--grid);stroke-width:1} .axis-line{stroke:var(--axis);stroke-width:1}
+  .tick{fill:var(--faint);font-family:var(--mono);font-size:11px}
+  .thr{stroke:var(--faint);stroke-width:1;stroke-dasharray:3 4;opacity:.7}
+  .thrlab{fill:var(--faint);font-size:10.5px;font-family:var(--mono)}
+  .ln-twc{stroke:var(--twc);stroke-width:2.5;fill:none;stroke-linejoin:round}
+  .ln-rdps{stroke:var(--rdps);stroke-width:2.5;fill:none;stroke-linejoin:round;stroke-dasharray:5 4}
+  .band-sat{fill:var(--band)} .band-row{fill:var(--row)}
+  .ptitle{fill:var(--muted);font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;text-transform:uppercase}
+  .daylab{fill:var(--ink);font-weight:650;font-size:12px}
+
+  .legend{display:flex;flex-wrap:wrap;gap:12px 18px;font-size:12.5px;color:var(--muted);margin:8px 2px 0}
+  .legend .i{display:flex;align-items:center;gap:6px}
+  .legend .ln{width:20px;border-top-width:2.5px;border-top-style:solid}
+  .legend .ln.d{border-top-style:dashed}
+
+  details{margin:8px 0 0;background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:2px 16px}
+  summary{cursor:pointer;font-size:14px;font-weight:600;padding:13px 0}
+  .meteo-wrap{overflow-x:auto} svg.meteo{display:block;width:100%;min-width:760px;height:auto;margin-bottom:8px}
+  .m .ln-twc{stroke:var(--twc);stroke-width:2.5;fill:none} .m .ln-rdps{stroke:var(--rdps);stroke-width:2.5;fill:none}
+  .m .ln-gust{stroke:var(--gust);stroke-width:1.6;fill:none;stroke-dasharray:4 4}
+  .cloudfill{fill:var(--cloud);opacity:.28} .cloudln{stroke:var(--cloud);stroke-width:1.6;fill:none}
+  .popbar{fill:var(--pop);opacity:.7} .wx-emoji{font-size:15px}
+  .arrow{stroke-width:1.6;fill:none;stroke-linecap:round} .vlabel{font-family:var(--mono);font-size:11px}
+  .rowlab{fill:var(--water);font-family:var(--mono);font-size:10px;letter-spacing:.06em}
+
+  footer{margin-top:28px;color:var(--muted);font-size:12.5px;line-height:1.65}
+  footer b{color:var(--ink)} code{font-family:var(--mono);font-size:.92em}
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Royal St. John's Regatta · Quidi Vidi Lake</p>
+    <h1>Saturday rowing conditions — flag outlook</h1>
+    <p class="sub">A go / caution / hold read for the racing course, hour by hour. Flags follow
+      wind on the water; times are Newfoundland Daylight (NDT).</p>
+    <div class="runmeta"><span id="rm-sources"></span><span>generated 2026-07-10 · ~1 day out</span></div>
+  </header>
+
+  <div class="hero" id="hero">
+    <div class="lamp" id="lamp"><span id="lampTxt"></span></div>
+    <div>
+      <p class="big" id="heroBig"></p>
+      <p id="heroText"></p>
+      <p class="caveat" id="heroCaveat"></p>
+    </div>
+  </div>
+
+  <h2><span class="n">01</span>Hour-by-hour flags — Saturday racing window</h2>
+  <div class="tl-scroll"><div class="tl" id="timeline"></div></div>
+  <div class="legend" style="margin-top:10px">
+    <span class="i"><b style="color:var(--green)">GREEN</b> good to row</span>
+    <span class="i"><b style="color:var(--yellow)">YELLOW</b> caution / marginal</span>
+    <span class="i"><b style="color:var(--red)">RED</b> hold</span>
+    <span class="i">compass = wind from · ↓ arrow = where it pushes boats · ⚠ down the course · big ° = air temp</span>
+  </div>
+
+  <h2><span class="n">02</span>How the flag is set</h2>
+  <div class="rules">
+    <div class="rule g"><div class="chip"></div><div><div class="k">GREEN — ≤ 20 km/h</div>
+      <div class="d">Light to moderate wind. Chop at the far buoys stays small (a few cm). Fair, rowable water.</div></div></div>
+    <div class="rule y"><div class="chip"></div><div><div class="k">YELLOW — 20–30 km/h</div>
+      <div class="d">Building wind. A down-the-course westerly makes the return leg into a headwind and stacks chop toward the buoys — watch closely.</div></div></div>
+    <div class="rule r"><div class="chip"></div><div><div class="k">RED — &gt; 30 km/h sustained</div>
+      <div class="d">Committee's hold threshold. Rough, unfair water and safety risk for low-freeboard shells.</div></div></div>
+  </div>
+  <div class="notecard">
+    <span class="lbl">Local adjustments applied</span>
+    <b>South winds are shadowed here.</b> The lake sits in the lee for due-south winds, and the models
+    over-forecast them — so <b>only winds from the south sector (SSE–SSW)</b> are discounted (about −20 % to −40 %,
+    strongest from due south); winds from any other direction stand as forecast. <b>Down-the-course westerlies</b>
+    are flagged with a ⚠ even when the speed itself is green, because they build the worst chop at the turn buoys
+    and turn the home leg into a headwind. The flag reads the <b>ECCC RDPS model wind</b>; The Weather Company
+    supplies the sky, temperature and shower chance.
+  </div>
+
+  <h2><span class="n">03</span>Why wind direction matters on this course</h2>
+  <div class="coursewrap">
+    <svg id="course" viewBox="0 0 900 210" role="img" aria-label="Diagram of the Quidi Vidi racing course and wind directions"></svg>
+    <p class="courselab" id="courselab"></p>
+  </div>
+
+  <h2><span class="n">04</span>Chop at the turn buoys</h2>
+  <div class="chart-scroll"><svg class="wave" id="wave" xmlns="http://www.w3.org/2000/svg"></svg></div>
+  <div class="legend">
+    <span class="i"><span class="ln" style="border-color:var(--twc)"></span>TWC</span>
+    <span class="i"><span class="ln d" style="border-color:var(--rdps)"></span>RDPS</span>
+    <span class="i">estimated significant wave height at the men's turn (1.2 km fetch), shadow-adjusted</span>
+  </div>
+
+  <h2><span class="n">05</span>Full technical meteogram</h2>
+  <details>
+    <summary>Show temperature, wind speed, gust, direction &amp; sky (meteorologist view)</summary>
+    <div class="meteo-wrap"><svg class="meteo m" id="svg" xmlns="http://www.w3.org/2000/svg"></svg></div>
+    <div class="legend">
+      <span class="i"><span class="ln" style="border-color:var(--twc)"></span>TWC</span>
+      <span class="i"><span class="ln" style="border-color:var(--rdps)"></span>RDPS</span>
+      <span class="i"><span class="ln d" style="border-color:var(--gust)"></span>gust (est. ×1.5)</span>
+    </div>
+  </details>
+
+  <footer id="foot"></footer>
+</div>
+
+<script>
+const ROW = [{"utc":"2026-07-10T12:00:00Z","ndt":"2026-07-10T09:30","day":"Fri","hour":9,"dow":"2026-07-10","emoji":"\u2601\ufe0f","phrase":null,"pop":null,"tw_temp":null,"rd_temp":15.4,"twc":{},"rdps":{"raw":10,"adj":10,"dir":300,"card":"WNW","hs":2,"cross":10,"rel":"cross-course"},"adj_worst":10,"dir_card":"WNW","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-10T13:00:00Z","ndt":"2026-07-10T10:30","day":"Fri","hour":10,"dow":"2026-07-10","emoji":"\u2601\ufe0f","phrase":null,"pop":null,"tw_temp":null,"rd_temp":16.7,"twc":{},"rdps":{"raw":11,"adj":11,"dir":320,"card":"NW","hs":3,"cross":11,"rel":"cross-course"},"adj_worst":11,"dir_card":"NW","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-10T14:00:00Z","ndt":"2026-07-10T11:30","day":"Fri","hour":11,"dow":"2026-07-10","emoji":"\u2601\ufe0f","phrase":null,"pop":null,"tw_temp":null,"rd_temp":17.6,"twc":{},"rdps":{"raw":7,"adj":7,"dir":348,"card":"NNW","hs":2,"cross":6,"rel":"cross-course"},"adj_worst":7,"dir_card":"NNW","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-10T15:00:00Z","ndt":"2026-07-10T12:30","day":"Fri","hour":12,"dow":"2026-07-10","emoji":"\u2601\ufe0f","phrase":null,"pop":null,"tw_temp":null,"rd_temp":17.2,"twc":{},"rdps":{"raw":8,"adj":8,"dir":50,"card":"NE","hs":4,"cross":1,"rel":"up-course"},"adj_worst":8,"dir_card":"NE","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-10T16:00:00Z","ndt":"2026-07-10T13:30","day":"Fri","hour":13,"dow":"2026-07-10","emoji":"\u2601\ufe0f","phrase":null,"pop":null,"tw_temp":null,"rd_temp":14.5,"twc":{},"rdps":{"raw":9,"adj":9,"dir":76,"card":"ENE","hs":4,"cross":5,"rel":"up-course"},"adj_worst":9,"dir_card":"ENE","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-10T17:00:00Z","ndt":"2026-07-10T14:30","day":"Fri","hour":14,"dow":"2026-07-10","emoji":"\u2601\ufe0f","phrase":null,"pop":null,"tw_temp":null,"rd_temp":12.8,"twc":{},"rdps":{"raw":14,"adj":14,"dir":122,"card":"ESE","hs":3,"cross":14,"rel":"cross-course"},"adj_worst":14,"dir_card":"ESE","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-10T18:00:00Z","ndt":"2026-07-10T15:30","day":"Fri","hour":15,"dow":"2026-07-10","emoji":"\u2601\ufe0f","phrase":null,"pop":null,"tw_temp":null,"rd_temp":13.3,"twc":{},"rdps":{"raw":21,"adj":19,"dir":154,"card":"SSE","hs":5,"cross":18,"rel":"cross-course"},"adj_worst":19,"dir_card":"SSE","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-10T19:00:00Z","ndt":"2026-07-10T16:30","day":"Fri","hour":16,"dow":"2026-07-10","emoji":"\ud83c\udf25\ufe0f","phrase":"Mostly Cloudy","pop":2,"tw_temp":20,"rd_temp":13.8,"twc":{"raw":15,"adj":11,"dir":198,"card":"SSW","hs":5,"cross":5,"rel":"down-course"},"rdps":{"raw":18,"adj":18,"dir":148,"card":"SSE","hs":4,"cross":18,"rel":"cross-course"},"adj_worst":18,"dir_card":"SSE","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-10T20:00:00Z","ndt":"2026-07-10T17:30","day":"Fri","hour":17,"dow":"2026-07-10","emoji":"\u26c5","phrase":"Partly Cloudy","pop":2,"tw_temp":21,"rd_temp":13.2,"twc":{"raw":13,"adj":12,"dir":208,"card":"SSW","hs":6,"cross":4,"rel":"down-course"},"rdps":{"raw":14,"adj":14,"dir":151,"card":"SSE","hs":4,"cross":14,"rel":"cross-course"},"adj_worst":14,"dir_card":"SSE","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-10T21:00:00Z","ndt":"2026-07-10T18:30","day":"Fri","hour":18,"dow":"2026-07-10","emoji":"\u26c5","phrase":"Partly Cloudy","pop":2,"tw_temp":21,"rd_temp":13.3,"twc":{"raw":13,"adj":13,"dir":240,"card":"WSW","hs":6,"cross":3,"rel":"down-course"},"rdps":{"raw":7,"adj":6,"dir":157,"card":"SSE","hs":2,"cross":6,"rel":"cross-course"},"adj_worst":6,"dir_card":"SSE","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-10T22:00:00Z","ndt":"2026-07-10T19:30","day":"Fri","hour":19,"dow":"2026-07-10","emoji":"\u2601\ufe0f","phrase":"Cloudy","pop":2,"tw_temp":20,"rd_temp":14.1,"twc":{"raw":9,"adj":9,"dir":249,"card":"WSW","hs":4,"cross":4,"rel":"down-course"},"rdps":{"raw":1,"adj":1,"dir":331,"card":"NNW","hs":0,"cross":1,"rel":"calm"},"adj_worst":1,"dir_card":"NNW","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-10T23:00:00Z","ndt":"2026-07-10T20:30","day":"Fri","hour":20,"dow":"2026-07-10","emoji":"\u2601\ufe0f","phrase":"Cloudy","pop":2,"tw_temp":19,"rd_temp":15.0,"twc":{"raw":11,"adj":11,"dir":255,"card":"WSW","hs":5,"cross":6,"rel":"down-course"},"rdps":{"raw":7,"adj":7,"dir":283,"card":"WNW","hs":3,"cross":6,"rel":"cross-course"},"adj_worst":7,"dir_card":"WNW","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-11T00:00:00Z","ndt":"2026-07-10T21:30","day":"Fri","hour":21,"dow":"2026-07-10","emoji":"\u2601\ufe0f","phrase":"Cloudy","pop":3,"tw_temp":18,"rd_temp":16.1,"twc":{"raw":11,"adj":11,"dir":264,"card":"W","hs":5,"cross":7,"rel":"down-course"},"rdps":{"raw":10,"adj":10,"dir":265,"card":"W","hs":4,"cross":6,"rel":"down-course"},"adj_worst":10,"dir_card":"W","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-11T01:00:00Z","ndt":"2026-07-10T22:30","day":"Fri","hour":22,"dow":"2026-07-10","emoji":"\u2601\ufe0f","phrase":"Cloudy","pop":7,"tw_temp":18,"rd_temp":16.1,"twc":{"raw":12,"adj":12,"dir":265,"card":"W","hs":5,"cross":8,"rel":"down-course"},"rdps":{"raw":14,"adj":14,"dir":264,"card":"W","hs":6,"cross":9,"rel":"down-course"},"adj_worst":14,"dir_card":"W","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-11T02:00:00Z","ndt":"2026-07-10T23:30","day":"Fri","hour":23,"dow":"2026-07-10","emoji":"\u2601\ufe0f","phrase":"Cloudy","pop":8,"tw_temp":17,"rd_temp":15.8,"twc":{"raw":11,"adj":11,"dir":266,"card":"W","hs":5,"cross":7,"rel":"down-course"},"rdps":{"raw":17,"adj":17,"dir":260,"card":"W","hs":7,"cross":10,"rel":"down-course"},"adj_worst":17,"dir_card":"W","downdc":true,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-11T03:00:00Z","ndt":"2026-07-11T00:30","day":"Sat","hour":0,"dow":"2026-07-11","emoji":"\u2601\ufe0f","phrase":"Cloudy","pop":8,"tw_temp":17,"rd_temp":15.4,"twc":{"raw":11,"adj":11,"dir":267,"card":"W","hs":5,"cross":7,"rel":"down-course"},"rdps":{"raw":16,"adj":16,"dir":265,"card":"W","hs":7,"cross":10,"rel":"down-course"},"adj_worst":16,"dir_card":"W","downdc":true,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-11T04:00:00Z","ndt":"2026-07-11T01:30","day":"Sat","hour":1,"dow":"2026-07-11","emoji":"\u2601\ufe0f","phrase":"Cloudy","pop":9,"tw_temp":16,"rd_temp":15.0,"twc":{"raw":11,"adj":11,"dir":272,"card":"W","hs":4,"cross":8,"rel":"cross-course"},"rdps":{"raw":11,"adj":11,"dir":268,"card":"W","hs":5,"cross":7,"rel":"down-course"},"adj_worst":11,"dir_card":"W","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-11T05:00:00Z","ndt":"2026-07-11T02:30","day":"Sat","hour":2,"dow":"2026-07-11","emoji":"\u2601\ufe0f","phrase":"Cloudy","pop":9,"tw_temp":16,"rd_temp":14.7,"twc":{"raw":9,"adj":9,"dir":271,"card":"W","hs":4,"cross":6,"rel":"cross-course"},"rdps":{"raw":8,"adj":8,"dir":268,"card":"W","hs":3,"cross":6,"rel":"down-course"},"adj_worst":8,"dir_card":"W","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-11T06:00:00Z","ndt":"2026-07-11T03:30","day":"Sat","hour":3,"dow":"2026-07-11","emoji":"\u2601\ufe0f","phrase":"Cloudy","pop":12,"tw_temp":16,"rd_temp":14.2,"twc":{"raw":9,"adj":9,"dir":267,"card":"W","hs":4,"cross":6,"rel":"down-course"},"rdps":{"raw":7,"adj":7,"dir":262,"card":"W","hs":3,"cross":4,"rel":"down-course"},"adj_worst":7,"dir_card":"W","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-11T07:00:00Z","ndt":"2026-07-11T04:30","day":"Sat","hour":4,"dow":"2026-07-11","emoji":"\u2601\ufe0f","phrase":"Cloudy","pop":16,"tw_temp":15,"rd_temp":13.8,"twc":{"raw":9,"adj":9,"dir":269,"card":"W","hs":4,"cross":6,"rel":"down-course"},"rdps":{"raw":8,"adj":8,"dir":260,"card":"W","hs":3,"cross":4,"rel":"down-course"},"adj_worst":8,"dir_card":"W","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-11T08:00:00Z","ndt":"2026-07-11T05:30","day":"Sat","hour":5,"dow":"2026-07-11","emoji":"\u2601\ufe0f","phrase":"Cloudy","pop":24,"tw_temp":15,"rd_temp":13.6,"twc":{"raw":7,"adj":7,"dir":268,"card":"W","hs":3,"cross":5,"rel":"down-course"},"rdps":{"raw":10,"adj":10,"dir":262,"card":"W","hs":5,"cross":6,"rel":"down-course"},"adj_worst":10,"dir_card":"W","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-11T09:00:00Z","ndt":"2026-07-11T06:30","day":"Sat","hour":6,"dow":"2026-07-11","emoji":"\ud83c\udf26\ufe0f","phrase":"Few Showers","pop":32,"tw_temp":15,"rd_temp":13.9,"twc":{"raw":7,"adj":7,"dir":261,"card":"W","hs":3,"cross":4,"rel":"down-course"},"rdps":{"raw":10,"adj":10,"dir":276,"card":"W","hs":4,"cross":7,"rel":"cross-course"},"adj_worst":10,"dir_card":"W","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-11T10:00:00Z","ndt":"2026-07-11T07:30","day":"Sat","hour":7,"dow":"2026-07-11","emoji":"\ud83c\udf27\ufe0f","phrase":"Showers","pop":42,"tw_temp":16,"rd_temp":14.5,"twc":{"raw":7,"adj":7,"dir":279,"card":"W","hs":3,"cross":6,"rel":"cross-course"},"rdps":{"raw":7,"adj":7,"dir":264,"card":"W","hs":3,"cross":4,"rel":"down-course"},"adj_worst":7,"dir_card":"W","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-11T11:00:00Z","ndt":"2026-07-11T08:30","day":"Sat","hour":8,"dow":"2026-07-11","emoji":"\ud83c\udf26\ufe0f","phrase":"Few Showers","pop":31,"tw_temp":17,"rd_temp":14.9,"twc":{"raw":6,"adj":6,"dir":270,"card":"W","hs":2,"cross":4,"rel":"down-course"},"rdps":{"raw":6,"adj":6,"dir":272,"card":"W","hs":3,"cross":5,"rel":"cross-course"},"adj_worst":6,"dir_card":"W","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-11T12:00:00Z","ndt":"2026-07-11T09:30","day":"Sat","hour":9,"dow":"2026-07-11","emoji":"\ud83c\udf27\ufe0f","phrase":"Showers","pop":40,"tw_temp":17,"rd_temp":14.6,"twc":{"raw":6,"adj":6,"dir":252,"card":"WSW","hs":3,"cross":3,"rel":"down-course"},"rdps":{"raw":2,"adj":2,"dir":338,"card":"NNW","hs":1,"cross":2,"rel":"calm"},"adj_worst":2,"dir_card":"NNW","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-11T13:00:00Z","ndt":"2026-07-11T10:30","day":"Sat","hour":10,"dow":"2026-07-11","emoji":"\ud83c\udf27\ufe0f","phrase":"Showers","pop":41,"tw_temp":18,"rd_temp":14.2,"twc":{"raw":7,"adj":7,"dir":222,"card":"SW","hs":3,"cross":0,"rel":"down-course"},"rdps":{"raw":3,"adj":3,"dir":334,"card":"NNW","hs":1,"cross":3,"rel":"cross-course"},"adj_worst":3,"dir_card":"NNW","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-11T14:00:00Z","ndt":"2026-07-11T11:30","day":"Sat","hour":11,"dow":"2026-07-11","emoji":"\ud83c\udf27\ufe0f","phrase":"Showers","pop":40,"tw_temp":18,"rd_temp":14.0,"twc":{"raw":9,"adj":6,"dir":172,"card":"S","hs":2,"cross":5,"rel":"cross-course"},"rdps":{"raw":3,"adj":3,"dir":126,"card":"SE","hs":1,"cross":3,"rel":"cross-course"},"adj_worst":3,"dir_card":"SE","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-11T15:00:00Z","ndt":"2026-07-11T12:30","day":"Sat","hour":12,"dow":"2026-07-11","emoji":"\ud83c\udf26\ufe0f","phrase":"Few Showers","pop":33,"tw_temp":19,"rd_temp":13.8,"twc":{"raw":10,"adj":7,"dir":164,"card":"SSE","hs":3,"cross":6,"rel":"cross-course"},"rdps":{"raw":5,"adj":5,"dir":153,"card":"SSE","hs":1,"cross":4,"rel":"cross-course"},"adj_worst":5,"dir_card":"SSE","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-11T16:00:00Z","ndt":"2026-07-11T13:30","day":"Sat","hour":13,"dow":"2026-07-11","emoji":"\u2601\ufe0f","phrase":"Cloudy","pop":11,"tw_temp":18,"rd_temp":13.8,"twc":{"raw":11,"adj":10,"dir":156,"card":"SSE","hs":3,"cross":9,"rel":"cross-course"},"rdps":{"raw":3,"adj":3,"dir":137,"card":"SE","hs":1,"cross":3,"rel":"calm"},"adj_worst":3,"dir_card":"SE","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-11T17:00:00Z","ndt":"2026-07-11T14:30","day":"Sat","hour":14,"dow":"2026-07-11","emoji":"\u2601\ufe0f","phrase":"Cloudy","pop":11,"tw_temp":18,"rd_temp":14.3,"twc":{"raw":10,"adj":10,"dir":125,"card":"SE","hs":2,"cross":10,"rel":"cross-course"},"rdps":{"raw":3,"adj":3,"dir":100,"card":"E","hs":1,"cross":2,"rel":"calm"},"adj_worst":3,"dir_card":"E","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-11T18:00:00Z","ndt":"2026-07-11T15:30","day":"Sat","hour":15,"dow":"2026-07-11","emoji":"\u2601\ufe0f","phrase":"Cloudy","pop":20,"tw_temp":18,"rd_temp":14.7,"twc":{"raw":10,"adj":10,"dir":77,"card":"ENE","hs":5,"cross":5,"rel":"up-course"},"rdps":{"raw":4,"adj":4,"dir":98,"card":"E","hs":2,"cross":3,"rel":"cross-course"},"adj_worst":4,"dir_card":"E","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-11T19:00:00Z","ndt":"2026-07-11T16:30","day":"Sat","hour":16,"dow":"2026-07-11","emoji":"\u2601\ufe0f","phrase":"Cloudy","pop":8,"tw_temp":18,"rd_temp":14.9,"twc":{"raw":10,"adj":10,"dir":72,"card":"ENE","hs":5,"cross":5,"rel":"up-course"},"rdps":{"raw":5,"adj":5,"dir":110,"card":"ESE","hs":2,"cross":5,"rel":"cross-course"},"adj_worst":5,"dir_card":"ESE","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-11T20:00:00Z","ndt":"2026-07-11T17:30","day":"Sat","hour":17,"dow":"2026-07-11","emoji":"\ud83c\udf25\ufe0f","phrase":"Mostly Cloudy","pop":8,"tw_temp":18,"rd_temp":15.0,"twc":{"raw":9,"adj":9,"dir":53,"card":"NE","hs":4,"cross":1,"rel":"up-course"},"rdps":{"raw":6,"adj":6,"dir":132,"card":"SE","hs":1,"cross":6,"rel":"cross-course"},"adj_worst":6,"dir_card":"SE","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-11T21:00:00Z","ndt":"2026-07-11T18:30","day":"Sat","hour":18,"dow":"2026-07-11","emoji":"\u26c5","phrase":"Partly Cloudy","pop":9,"tw_temp":17,"rd_temp":14.9,"twc":{"raw":10,"adj":10,"dir":32,"card":"NNE","hs":5,"cross":2,"rel":"up-course"},"rdps":{"raw":5,"adj":5,"dir":148,"card":"SSE","hs":1,"cross":5,"rel":"cross-course"},"adj_worst":5,"dir_card":"SSE","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-11T22:00:00Z","ndt":"2026-07-11T19:30","day":"Sat","hour":19,"dow":"2026-07-11","emoji":"\u26c5","phrase":"Partly Cloudy","pop":10,"tw_temp":17,"rd_temp":14.6,"twc":{"raw":9,"adj":9,"dir":25,"card":"NNE","hs":4,"cross":3,"rel":"up-course"},"rdps":{"raw":4,"adj":3,"dir":163,"card":"SSE","hs":1,"cross":3,"rel":"cross-course"},"adj_worst":3,"dir_card":"SSE","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-11T23:00:00Z","ndt":"2026-07-11T20:30","day":"Sat","hour":20,"dow":"2026-07-11","emoji":"\ud83c\udf25\ufe0f","phrase":"Mostly Cloudy","pop":11,"tw_temp":16,"rd_temp":14.1,"twc":{"raw":10,"adj":10,"dir":16,"card":"NNE","hs":5,"cross":5,"rel":"up-course"},"rdps":{"raw":3,"adj":2,"dir":179,"card":"S","hs":1,"cross":1,"rel":"calm"},"adj_worst":2,"dir_card":"S","downdc":false,"flag":"green","flagLab":"GREEN"},{"utc":"2026-07-12T00:00:00Z","ndt":"2026-07-11T21:30","day":"Sat","hour":21,"dow":"2026-07-11","emoji":"\u2601\ufe0f","phrase":"Cloudy","pop":22,"tw_temp":14,"rd_temp":13.4,"twc":{"raw":10,"adj":10,"dir":3,"card":"N","hs":4,"cross":7,"rel":"up-course"},"rdps":{"raw":2,"adj":2,"dir":205,"card":"SSW","hs":0,"cross":1,"rel":"calm"},"adj_worst":2,"dir_card":"SSW","downdc":false,"flag":"green","flagLab":"GREEN"}];
+const DATA = [{"utc":"2026-07-10T12:00:00Z","ndt":"2026-07-10T09:30","day":"Fri","hour":9,"dow":"2026-07-10","rdps":{"temp":15.4,"wspd":9.9,"gust":14.8,"wdir":300,"cloud":33,"wx":"mostly-sunny"},"twc":{"temp":null,"wspd":null,"gust":null,"wdir":null,"cloud":null,"pop":null,"phrase":null,"icon":null,"emoji":"\u2601\ufe0f"}},{"utc":"2026-07-10T13:00:00Z","ndt":"2026-07-10T10:30","day":"Fri","hour":10,"dow":"2026-07-10","rdps":{"temp":16.7,"wspd":10.9,"gust":16.3,"wdir":320,"cloud":6,"wx":"sunny"},"twc":{"temp":null,"wspd":null,"gust":null,"wdir":null,"cloud":null,"pop":null,"phrase":null,"icon":null,"emoji":"\u2601\ufe0f"}},{"utc":"2026-07-10T14:00:00Z","ndt":"2026-07-10T11:30","day":"Fri","hour":11,"dow":"2026-07-10","rdps":{"temp":17.6,"wspd":6.8,"gust":10.2,"wdir":348,"cloud":12,"wx":"sunny"},"twc":{"temp":null,"wspd":null,"gust":null,"wdir":null,"cloud":null,"pop":null,"phrase":null,"icon":null,"emoji":"\u2601\ufe0f"}},{"utc":"2026-07-10T15:00:00Z","ndt":"2026-07-10T12:30","day":"Fri","hour":12,"dow":"2026-07-10","rdps":{"temp":17.2,"wspd":7.8,"gust":11.7,"wdir":50,"cloud":20,"wx":"mostly-sunny"},"twc":{"temp":null,"wspd":null,"gust":null,"wdir":null,"cloud":null,"pop":null,"phrase":null,"icon":null,"emoji":"\u2601\ufe0f"}},{"utc":"2026-07-10T16:00:00Z","ndt":"2026-07-10T13:30","day":"Fri","hour":13,"dow":"2026-07-10","rdps":{"temp":14.5,"wspd":9.2,"gust":13.8,"wdir":76,"cloud":25,"wx":"mostly-sunny"},"twc":{"temp":null,"wspd":null,"gust":null,"wdir":null,"cloud":null,"pop":null,"phrase":null,"icon":null,"emoji":"\u2601\ufe0f"}},{"utc":"2026-07-10T17:00:00Z","ndt":"2026-07-10T14:30","day":"Fri","hour":14,"dow":"2026-07-10","rdps":{"temp":12.8,"wspd":14.0,"gust":21.0,"wdir":122,"cloud":75,"wx":"mostly-cloudy"},"twc":{"temp":null,"wspd":null,"gust":null,"wdir":null,"cloud":null,"pop":null,"phrase":null,"icon":null,"emoji":"\u2601\ufe0f"}},{"utc":"2026-07-10T18:00:00Z","ndt":"2026-07-10T15:30","day":"Fri","hour":15,"dow":"2026-07-10","rdps":{"temp":13.3,"wspd":20.8,"gust":31.1,"wdir":154,"cloud":44,"wx":"mostly-sunny"},"twc":{"temp":null,"wspd":null,"gust":null,"wdir":null,"cloud":null,"pop":null,"phrase":null,"icon":null,"emoji":"\u2601\ufe0f"}},{"utc":"2026-07-10T19:00:00Z","ndt":"2026-07-10T16:30","day":"Fri","hour":16,"dow":"2026-07-10","rdps":{"temp":13.8,"wspd":18.2,"gust":27.4,"wdir":148,"cloud":62,"wx":"mostly-cloudy"},"twc":{"temp":20,"wspd":15,"gust":29,"wdir":198,"cloud":77,"pop":2,"phrase":"Mostly Cloudy","icon":null,"emoji":"\ud83c\udf25\ufe0f"}},{"utc":"2026-07-10T20:00:00Z","ndt":"2026-07-10T17:30","day":"Fri","hour":17,"dow":"2026-07-10","rdps":{"temp":13.2,"wspd":14.5,"gust":21.7,"wdir":151,"cloud":83,"wx":"mostly-cloudy"},"twc":{"temp":21,"wspd":13,"gust":null,"wdir":208,"cloud":59,"pop":2,"phrase":"Partly Cloudy","icon":null,"emoji":"\u26c5"}},{"utc":"2026-07-10T21:00:00Z","ndt":"2026-07-10T18:30","day":"Fri","hour":18,"dow":"2026-07-10","rdps":{"temp":13.3,"wspd":7.4,"gust":11.1,"wdir":157,"cloud":41,"wx":"mostly-sunny"},"twc":{"temp":21,"wspd":13,"gust":null,"wdir":240,"cloud":55,"pop":2,"phrase":"Partly Cloudy","icon":null,"emoji":"\u26c5"}},{"utc":"2026-07-10T22:00:00Z","ndt":"2026-07-10T19:30","day":"Fri","hour":19,"dow":"2026-07-10","rdps":{"temp":14.1,"wspd":0.6,"gust":0.9,"wdir":331,"cloud":17,"wx":"mostly-sunny"},"twc":{"temp":20,"wspd":9,"gust":null,"wdir":249,"cloud":93,"pop":2,"phrase":"Cloudy","icon":null,"emoji":"\u2601\ufe0f"}},{"utc":"2026-07-10T23:00:00Z","ndt":"2026-07-10T20:30","day":"Fri","hour":20,"dow":"2026-07-10","rdps":{"temp":15.0,"wspd":7.1,"gust":10.6,"wdir":283,"cloud":36,"wx":"mostly-sunny"},"twc":{"temp":19,"wspd":11,"gust":null,"wdir":255,"cloud":96,"pop":2,"phrase":"Cloudy","icon":null,"emoji":"\u2601\ufe0f"}},{"utc":"2026-07-11T00:00:00Z","ndt":"2026-07-10T21:30","day":"Fri","hour":21,"dow":"2026-07-10","rdps":{"temp":16.1,"wspd":9.5,"gust":14.3,"wdir":265,"cloud":84,"wx":"mostly-cloudy"},"twc":{"temp":18,"wspd":11,"gust":null,"wdir":264,"cloud":95,"pop":3,"phrase":"Cloudy","icon":null,"emoji":"\u2601\ufe0f"}},{"utc":"2026-07-11T01:00:00Z","ndt":"2026-07-10T22:30","day":"Fri","hour":22,"dow":"2026-07-10","rdps":{"temp":16.1,"wspd":14.0,"gust":20.9,"wdir":264,"cloud":77,"wx":"mostly-cloudy"},"twc":{"temp":18,"wspd":12,"gust":null,"wdir":265,"cloud":97,"pop":7,"phrase":"Cloudy","icon":null,"emoji":"\u2601\ufe0f"}},{"utc":"2026-07-11T02:00:00Z","ndt":"2026-07-10T23:30","day":"Fri","hour":23,"dow":"2026-07-10","rdps":{"temp":15.8,"wspd":16.6,"gust":24.9,"wdir":260,"cloud":41,"wx":"mostly-sunny"},"twc":{"temp":17,"wspd":11,"gust":null,"wdir":266,"cloud":93,"pop":8,"phrase":"Cloudy","icon":null,"emoji":"\u2601\ufe0f"}},{"utc":"2026-07-11T03:00:00Z","ndt":"2026-07-11T00:30","day":"Sat","hour":0,"dow":"2026-07-11","rdps":{"temp":15.4,"wspd":15.6,"gust":23.4,"wdir":265,"cloud":47,"wx":"mostly-sunny"},"twc":{"temp":17,"wspd":11,"gust":null,"wdir":267,"cloud":95,"pop":8,"phrase":"Cloudy","icon":null,"emoji":"\u2601\ufe0f"}},{"utc":"2026-07-11T04:00:00Z","ndt":"2026-07-11T01:30","day":"Sat","hour":1,"dow":"2026-07-11","rdps":{"temp":15.0,"wspd":10.9,"gust":16.4,"wdir":268,"cloud":39,"wx":"mostly-sunny"},"twc":{"temp":16,"wspd":11,"gust":null,"wdir":272,"cloud":95,"pop":9,"phrase":"Cloudy","icon":null,"emoji":"\u2601\ufe0f"}},{"utc":"2026-07-11T05:00:00Z","ndt":"2026-07-11T02:30","day":"Sat","hour":2,"dow":"2026-07-11","rdps":{"temp":14.7,"wspd":8.2,"gust":12.3,"wdir":268,"cloud":48,"wx":"mostly-sunny"},"twc":{"temp":16,"wspd":9,"gust":null,"wdir":271,"cloud":97,"pop":9,"phrase":"Cloudy","icon":null,"emoji":"\u2601\ufe0f"}},{"utc":"2026-07-11T06:00:00Z","ndt":"2026-07-11T03:30","day":"Sat","hour":3,"dow":"2026-07-11","rdps":{"temp":14.2,"wspd":6.7,"gust":10.1,"wdir":262,"cloud":44,"wx":"mostly-sunny"},"twc":{"temp":16,"wspd":9,"gust":null,"wdir":267,"cloud":93,"pop":12,"phrase":"Cloudy","icon":null,"emoji":"\u2601\ufe0f"}},{"utc":"2026-07-11T07:00:00Z","ndt":"2026-07-11T04:30","day":"Sat","hour":4,"dow":"2026-07-11","rdps":{"temp":13.8,"wspd":7.8,"gust":11.7,"wdir":260,"cloud":14,"wx":"sunny"},"twc":{"temp":15,"wspd":9,"gust":null,"wdir":269,"cloud":95,"pop":16,"phrase":"Cloudy","icon":null,"emoji":"\u2601\ufe0f"}},{"utc":"2026-07-11T08:00:00Z","ndt":"2026-07-11T05:30","day":"Sat","hour":5,"dow":"2026-07-11","rdps":{"temp":13.6,"wspd":10.3,"gust":15.5,"wdir":262,"cloud":42,"wx":"mostly-sunny"},"twc":{"temp":15,"wspd":7,"gust":null,"wdir":268,"cloud":96,"pop":24,"phrase":"Cloudy","icon":null,"emoji":"\u2601\ufe0f"}},{"utc":"2026-07-11T09:00:00Z","ndt":"2026-07-11T06:30","day":"Sat","hour":6,"dow":"2026-07-11","rdps":{"temp":13.9,"wspd":9.6,"gust":14.4,"wdir":276,"cloud":69,"wx":"mostly-cloudy"},"twc":{"temp":15,"wspd":7,"gust":null,"wdir":261,"cloud":95,"pop":32,"phrase":"Few Showers","icon":null,"emoji":"\ud83c\udf26\ufe0f"}},{"utc":"2026-07-11T10:00:00Z","ndt":"2026-07-11T07:30","day":"Sat","hour":7,"dow":"2026-07-11","rdps":{"temp":14.5,"wspd":6.6,"gust":9.9,"wdir":264,"cloud":80,"wx":"mostly-cloudy"},"twc":{"temp":16,"wspd":7,"gust":null,"wdir":279,"cloud":89,"pop":42,"phrase":"Showers","icon":null,"emoji":"\ud83c\udf27\ufe0f"}},{"utc":"2026-07-11T11:00:00Z","ndt":"2026-07-11T08:30","day":"Sat","hour":8,"dow":"2026-07-11","rdps":{"temp":14.9,"wspd":6.5,"gust":9.7,"wdir":272,"cloud":98,"wx":"cloudy"},"twc":{"temp":17,"wspd":6,"gust":null,"wdir":270,"cloud":93,"pop":31,"phrase":"Few Showers","icon":null,"emoji":"\ud83c\udf26\ufe0f"}},{"utc":"2026-07-11T12:00:00Z","ndt":"2026-07-11T09:30","day":"Sat","hour":9,"dow":"2026-07-11","rdps":{"temp":14.6,"wspd":1.8,"gust":2.7,"wdir":338,"cloud":98,"wx":"showers"},"twc":{"temp":17,"wspd":6,"gust":null,"wdir":252,"cloud":91,"pop":40,"phrase":"Showers","icon":null,"emoji":"\ud83c\udf27\ufe0f"}},{"utc":"2026-07-11T13:00:00Z","ndt":"2026-07-11T10:30","day":"Sat","hour":10,"dow":"2026-07-11","rdps":{"temp":14.2,"wspd":3.0,"gust":4.5,"wdir":334,"cloud":98,"wx":"showers"},"twc":{"temp":18,"wspd":7,"gust":null,"wdir":222,"cloud":90,"pop":41,"phrase":"Showers","icon":null,"emoji":"\ud83c\udf27\ufe0f"}},{"utc":"2026-07-11T14:00:00Z","ndt":"2026-07-11T11:30","day":"Sat","hour":11,"dow":"2026-07-11","rdps":{"temp":14.0,"wspd":3.3,"gust":4.9,"wdir":126,"cloud":98,"wx":"showers"},"twc":{"temp":18,"wspd":9,"gust":null,"wdir":172,"cloud":93,"pop":40,"phrase":"Showers","icon":null,"emoji":"\ud83c\udf27\ufe0f"}},{"utc":"2026-07-11T15:00:00Z","ndt":"2026-07-11T12:30","day":"Sat","hour":12,"dow":"2026-07-11","rdps":{"temp":13.8,"wspd":4.9,"gust":7.4,"wdir":153,"cloud":98,"wx":"showers"},"twc":{"temp":19,"wspd":10,"gust":null,"wdir":164,"cloud":93,"pop":33,"phrase":"Few Showers","icon":null,"emoji":"\ud83c\udf26\ufe0f"}},{"utc":"2026-07-11T16:00:00Z","ndt":"2026-07-11T13:30","day":"Sat","hour":13,"dow":"2026-07-11","rdps":{"temp":13.8,"wspd":2.7,"gust":4.1,"wdir":137,"cloud":95,"wx":"cloudy"},"twc":{"temp":18,"wspd":11,"gust":null,"wdir":156,"cloud":89,"pop":11,"phrase":"Cloudy","icon":null,"emoji":"\u2601\ufe0f"}},{"utc":"2026-07-11T17:00:00Z","ndt":"2026-07-11T14:30","day":"Sat","hour":14,"dow":"2026-07-11","rdps":{"temp":14.3,"wspd":2.7,"gust":4.0,"wdir":100,"cloud":62,"wx":"mostly-cloudy"},"twc":{"temp":18,"wspd":10,"gust":null,"wdir":125,"cloud":89,"pop":11,"phrase":"Cloudy","icon":null,"emoji":"\u2601\ufe0f"}},{"utc":"2026-07-11T18:00:00Z","ndt":"2026-07-11T15:30","day":"Sat","hour":15,"dow":"2026-07-11","rdps":{"temp":14.7,"wspd":4.3,"gust":6.4,"wdir":98,"cloud":5,"wx":"sunny"},"twc":{"temp":18,"wspd":10,"gust":null,"wdir":77,"cloud":91,"pop":20,"phrase":"Cloudy","icon":null,"emoji":"\u2601\ufe0f"}},{"utc":"2026-07-11T19:00:00Z","ndt":"2026-07-11T16:30","day":"Sat","hour":16,"dow":"2026-07-11","rdps":{"temp":14.9,"wspd":5.2,"gust":7.8,"wdir":110,"cloud":0,"wx":"sunny"},"twc":{"temp":18,"wspd":10,"gust":null,"wdir":72,"cloud":84,"pop":8,"phrase":"Cloudy","icon":null,"emoji":"\u2601\ufe0f"}},{"utc":"2026-07-11T20:00:00Z","ndt":"2026-07-11T17:30","day":"Sat","hour":17,"dow":"2026-07-11","rdps":{"temp":15.0,"wspd":5.8,"gust":8.7,"wdir":132,"cloud":41,"wx":"mostly-sunny"},"twc":{"temp":18,"wspd":9,"gust":null,"wdir":53,"cloud":63,"pop":8,"phrase":"Mostly Cloudy","icon":null,"emoji":"\ud83c\udf25\ufe0f"}},{"utc":"2026-07-11T21:00:00Z","ndt":"2026-07-11T18:30","day":"Sat","hour":18,"dow":"2026-07-11","rdps":{"temp":14.9,"wspd":5.0,"gust":7.6,"wdir":148,"cloud":0,"wx":"sunny"},"twc":{"temp":17,"wspd":10,"gust":null,"wdir":32,"cloud":40,"pop":9,"phrase":"Partly Cloudy","icon":null,"emoji":"\u26c5"}},{"utc":"2026-07-11T22:00:00Z","ndt":"2026-07-11T19:30","day":"Sat","hour":19,"dow":"2026-07-11","rdps":{"temp":14.6,"wspd":4.5,"gust":6.8,"wdir":163,"cloud":0,"wx":"sunny"},"twc":{"temp":17,"wspd":9,"gust":null,"wdir":25,"cloud":49,"pop":10,"phrase":"Partly Cloudy","icon":null,"emoji":"\u26c5"}},{"utc":"2026-07-11T23:00:00Z","ndt":"2026-07-11T20:30","day":"Sat","hour":20,"dow":"2026-07-11","rdps":{"temp":14.1,"wspd":3.4,"gust":5.1,"wdir":179,"cloud":0,"wx":"sunny"},"twc":{"temp":16,"wspd":10,"gust":null,"wdir":16,"cloud":61,"pop":11,"phrase":"Mostly Cloudy","icon":null,"emoji":"\ud83c\udf25\ufe0f"}},{"utc":"2026-07-12T00:00:00Z","ndt":"2026-07-11T21:30","day":"Sat","hour":21,"dow":"2026-07-11","rdps":{"temp":13.4,"wspd":1.7,"gust":2.5,"wdir":205,"cloud":0,"wx":"sunny"},"twc":{"temp":14,"wspd":10,"gust":null,"wdir":3,"cloud":94,"pop":22,"phrase":"Cloudy","icon":null,"emoji":"\u2601\ufe0f"}}];
+const SVGNS="http://www.w3.org/2000/svg";
+const E=(t,a,x)=>{const e=document.createElementNS(SVGNS,t);for(const k in(a||{}))e.setAttribute(k,a[k]);if(x!=null)e.textContent=x;return e;};
+const compass=d=>d==null?"–":["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"][Math.round((d%360)/22.5)%16];
+document.getElementById("rm-sources").textContent="Wind: ECCC RDPS (run 2026-07-10 12Z) · Sky & temp: The Weather Company";
+
+// wind arrow: where the wind blows TO, map orientation (east=right, north=up)
+function windArrow(fromDeg, size, cls){
+  const g=E("g"); if(fromDeg==null)return g;
+  const to=(fromDeg+180)*Math.PI/180, sx=Math.sin(to), sy=-Math.cos(to);
+  const L=size, hx=sx*L, hy=sy*L;
+  g.appendChild(E("line",{x1:-hx*.6,y1:-hy*.6,x2:hx,y2:hy,class:cls,"stroke-width":2}));
+  const a1=to+Math.PI*0.8,a2=to-Math.PI*0.8,hl=size*0.5;
+  g.appendChild(E("path",{d:`M${hx},${hy} L${hx+Math.sin(a1)*hl},${hy-Math.cos(a1)*hl} L${hx+Math.sin(a2)*hl},${hy-Math.cos(a2)*hl} Z`,fill:`var(${cls==='arw-r'?'--red':'--water'})`,stroke:"none"}));
+  return g;
+}
+
+// ---------- hero ----------
+const sat=ROW.filter(o=>o.dow==="2026-07-11"&&o.hour>=6&&o.hour<=17);
+const flags=sat.map(o=>o.flag);
+const worst=flags.includes("red")?"red":flags.includes("yellow")?"yellow":"green";
+const lo=Math.min(...sat.map(o=>o.adj_worst)), hi=Math.max(...sat.map(o=>o.adj_worst));
+const maxpop=Math.max(...sat.map(o=>o.pop||0));
+const tHi=Math.round(Math.max(...sat.map(o=>o.tw_temp))), tLo=Math.round(Math.min(...sat.map(o=>o.rd_temp)));
+const downdcHrs=sat.filter(o=>o.downdc).length;
+const heroCopy={
+  green:["Green — good to row all day",
+    `Winds stay light on the water — roughly <b>${lo}–${hi} km/h</b> once the south-shadow is applied — so chop at the turn buoys never builds past a few centimetres. No wind concern for racing Saturday.`],
+  yellow:["Yellow — rowable, watch the wind",
+    `Wind runs <b>${lo}–${hi} km/h</b>. Marginal at times, especially any down-the-course westerly. Keep an eye on the afternoon.`],
+  red:["Red — hold likely at times",
+    `Wind reaches <b>${hi} km/h</b>, over the hold threshold. Expect rough, unfair water in the flagged hours.`]
+};
+document.getElementById("hero").className="hero "+worst;
+document.getElementById("lamp").className="lamp "+worst;
+document.getElementById("lampTxt").textContent=worst.toUpperCase();
+document.getElementById("heroBig").textContent=heroCopy[worst][0];
+document.getElementById("heroText").innerHTML=heroCopy[worst][1];
+document.getElementById("heroCaveat").innerHTML=
+  `Air roughly <b>${tLo}\u2013${tHi}\u00B0C</b> through the day. Showers possible (up to <b>${maxpop}% chance</b>, mainly morning) \u2014 a comfort factor, not a wind flag. `+
+  (downdcHrs?`${downdcHrs} h carry a down-the-course SW\u2019ly (\u26a0). `:``)+
+  `Forecast is ~1 day out and sharpening; HRDPS now covers Saturday for an even finer read.`;
+
+// ---------- timeline ----------
+const tl=document.getElementById("timeline");
+sat.forEach(o=>{
+  const w=o.twc.adj!=null?o.twc:o.rdps;
+  const spd=o.adj_worst, dir=(o.rdps.dir!=null?o.rdps.dir:o.twc.dir);
+  const cell=document.createElement("div");
+  cell.className="hr "+o.flag;
+  const arrowCls=o.downdc?"arw-r":"arw";
+  cell.innerHTML=`<div class="bar"></div><div class="t">${o.ndt.slice(11)}</div>`+
+    `<div class="wx" title="${o.phrase}">${o.emoji}</div><div class="tmp">${Math.round(o.tw_temp)}°</div>`;
+  const svg=E("svg",{width:34,height:24,viewBox:"-17 -12 34 24"});
+  svg.appendChild(windArrow(dir,9,o.downdc?"arw-r":"arw"));
+  cell.appendChild(svg);
+  const d2=document.createElement("div");
+  d2.innerHTML=`<div class="spd">${spd}<small> km/h</small></div>`+
+    `<div class="dir">${o.dir_card}</div>`+
+    `<div class="rel">${relShort(o)}</div>`+
+    `<div class="warn">${o.downdc?"\u26a0 down course":""}</div>`+
+    `<div class="pop">${o.pop?o.pop+"%":""}</div>`;
+  cell.appendChild(d2);
+  tl.appendChild(cell);
+});
+function relShort(o){const r=(o.rdps.rel||o.twc.rel||"");return r==="down-course"?"↓ course":r==="up-course"?"↑ course":r==="cross-course"?"cross":r;}
+
+// ---------- course diagram (SW-NE) ----------
+(function(){const s=document.getElementById("course");const W=900,H=232;
+  s.setAttribute("viewBox",`0 0 ${W} ${H}`);
+  const sw={x:150,y:172}, ne={x:700,y:80};
+  s.appendChild(E("line",{x1:sw.x,y1:sw.y,x2:ne.x,y2:ne.y,stroke:"var(--water)","stroke-opacity":.28,"stroke-width":42,"stroke-linecap":"round"}));
+  s.appendChild(E("line",{x1:sw.x,y1:sw.y,x2:ne.x,y2:ne.y,stroke:"var(--water)","stroke-opacity":.55,"stroke-width":1.5,"stroke-dasharray":"2 9"}));
+  const mid={x:(sw.x+ne.x)/2,y:(sw.y+ne.y)/2};
+  s.appendChild(E("circle",{cx:sw.x,cy:sw.y,r:7,fill:"var(--ink)"}));
+  s.appendChild(E("circle",{cx:ne.x,cy:ne.y,r:7,fill:"none",stroke:"var(--ink)","stroke-width":2.5}));
+  s.appendChild(E("circle",{cx:mid.x,cy:mid.y,r:5,fill:"none",stroke:"var(--muted)","stroke-width":2}));
+  const T=(x,y,t,col)=>s.appendChild(E("text",{x,y,"text-anchor":"middle",fill:col||"var(--ink)","font-size":12,"font-family":"var(--mono)"},t));
+  T(sw.x,sw.y+28,"START / FINISH (SW)");
+  T(ne.x,ne.y-16,"TURN BUOYS (NE \u00b7 1.2 km)");
+  T(mid.x+56,mid.y+20,"\u00bd-way 600 m","var(--muted)");
+  const nx=842,ny=176; s.appendChild(E("line",{x1:nx,y1:ny,x2:nx,y2:ny-30,stroke:"var(--muted)","stroke-width":2}));
+  s.appendChild(E("path",{d:`M${nx},${ny-36} L${nx-5},${ny-27} L${nx+5},${ny-27} Z`,fill:"var(--muted)"}));
+  T(nx,ny+15,"N","var(--muted)");
+  const wind=(cx,cy,f,color,txt)=>{const to=(f+180)*Math.PI/180,ux=Math.sin(to),uy=-Math.cos(to),Ln=24;
+    s.appendChild(E("line",{x1:cx-ux*Ln*.35,y1:cy-uy*Ln*.35,x2:cx+ux*Ln,y2:cy+uy*Ln,stroke:color,"stroke-width":3,"stroke-linecap":"round"}));
+    const a1=to+Math.PI*.8,a2=to-Math.PI*.8,hx=cx+ux*Ln,hy=cy+uy*Ln;
+    s.appendChild(E("path",{d:`M${hx},${hy} L${hx+Math.sin(a1)*10},${hy-Math.cos(a1)*10} L${hx+Math.sin(a2)*10},${hy-Math.cos(a2)*10} Z`,fill:color}));
+    T(cx,cy-30,txt,color);};
+  wind(250,66,225,"var(--red)","SW \u00b7 down the course");
+  wind(470,60,315,"var(--muted)","NW \u00b7 cross");
+  wind(650,150,180,"var(--water)","S \u00b7 shadowed");
+})();
+document.getElementById("courselab").innerHTML=
+  `The course runs <b>SW\u2192NE</b>. A <b>southwesterly blows straight down its length</b> \u2014 the longest fetch, the biggest chop at the far (NE) turn buoys, and a headwind on the home leg \u2014 which is why any wind with west in it is the least welcome, even when it\u2019s light. <b>Northeasterlies</b> run up the course; <b>NW/SE</b> winds blow across it (lane push); and <b>south winds run lighter here than forecast</b> (the lake sits in the lee).`;
+
+// ---------- wave chart at buoys ----------
+(function(){const svg=document.getElementById("wave");const W=980,H=230,padL=44,padR=70;
+  svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+  const n=ROW.length, px=i=>padL+i*(W-padL-padR)/(n-1);
+  const vals=[]; ROW.forEach(o=>{["twc","rdps"].forEach(s=>{if(o[s].hs!=null)vals.push(o[s].hs)});});
+  const hi=Math.max(12,Math.max(...vals)*1.25), pt=40, pb=H-34;
+  const y=v=>pb-(v/hi)*(pb-pt);
+  // saturday band
+  const si=ROW.map((d,i)=>d.dow==="2026-07-11"?i:-1).filter(i=>i>=0);
+  if(si.length){const a=px(si[0])-(px(1)-px(0))/2,b=px(si[si.length-1])+(px(1)-px(0))/2;
+    svg.appendChild(E("rect",{x:a,y:pt-10,width:b-a,height:pb-pt+10,class:"band-sat"}));
+    svg.appendChild(E("text",{x:(a+b)/2,y:pt-14,"text-anchor":"middle",class:"daylab"},"Saturday"));}
+  // thresholds
+  [[8,"noticeable chop"],[15,"rough"]].forEach(([v,t])=>{ if(v<hi){
+    svg.appendChild(E("line",{x1:padL,y1:y(v),x2:W-padR,y2:y(v),class:"thr"}));
+    svg.appendChild(E("text",{x:W-padR+4,y:y(v)+3,class:"thrlab"},t));}});
+  // y ticks
+  [0,Math.round(hi/2),Math.round(hi)].forEach(v=>{svg.appendChild(E("text",{x:padL-6,y:y(v)+3,"text-anchor":"end",class:"tick"},v));});
+  svg.appendChild(E("text",{x:padL-6,y:pt-16,"text-anchor":"end",class:"ptitle"},"cm"));
+  // lines
+  [["twc","ln-twc"],["rdps","ln-rdps"]].forEach(([s,cls])=>{
+    let d="",st=false; ROW.forEach((o,i)=>{const v=o[s].hs; if(v==null){st=false;return;} d+=(st?"L":"M")+px(i)+","+y(v)+" ";st=true;});
+    svg.appendChild(E("path",{d,class:cls}));
+  });
+  // x ticks every 6h at midnight/noon
+  const axY=pb;
+  svg.appendChild(E("line",{x1:padL,y1:axY,x2:W-padR,y2:axY,class:"axis-line"}));
+  ROW.forEach((o,i)=>{ if(o.hour%6!==0)return; const h=o.hour,lab=(h===0?o.day+" 12a":h===12?"12p":h+"");
+    svg.appendChild(E("line",{x1:px(i),y1:axY,x2:px(i),y2:axY+4,class:"axis-line"}));
+    svg.appendChild(E("text",{x:px(i),y:axY+16,"text-anchor":"middle",class:"tick"},h===0?o.day:(h===12?"12p":h+"a")));});
+})();
+
+// ---------- technical meteogram (compact, from earlier build) ----------
+(function(){const svg=document.getElementById("svg");const W=1040,padL=46,padR=92;
+  const n=DATA.length, px=i=>padL+i*(W-padL-padR)/(n-1);
+  const L={temp:{y:120,h:96,title:"Temperature °C"},wind:{y:300,h:110,title:"Wind km/h"},cloud:{y:450,h:70,title:"Cloud %"},
+    strip:{y:54,h:36}, aw:{twc:250,rdps:272}};
+  const H=560; svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+  const satIdx=DATA.map((d,i)=>d.dow==="2026-07-11"?i:-1).filter(i=>i>=0);
+  if(satIdx.length){const a=px(satIdx[0])-(px(1)-px(0))/2,b=px(satIdx[satIdx.length-1])+(px(1)-px(0))/2;
+    svg.appendChild(E("rect",{x:a,y:L.strip.y-6,width:b-a,height:L.cloud.y+L.cloud.h-L.strip.y+8,class:"band-sat"}));}
+  let last=null;DATA.forEach((d,i)=>{if(d.dow!==last){last=d.dow;if(i>0){const x=px(i)-(px(1)-px(0))/2;
+    svg.appendChild(E("line",{x1:x,y1:L.strip.y-6,x2:x,y2:L.cloud.y+L.cloud.h,class:"grid-line"}));}
+    svg.appendChild(E("text",{x:px(i)+4,y:L.strip.y-20,class:"daylab"},d.day+" "+d.dow.slice(8)));}});
+  function panel(p,series,fmt,zero){const vs=[];series.forEach(s=>DATA.forEach(d=>{const v=s.get(d);if(v!=null)vs.push(v);}));
+    let lov=Math.min(...vs),hiv=Math.max(...vs);const pad=(hiv-lov)*.15||1;lov=zero?0:lov-pad;hiv+=pad;
+    const y=v=>p.y+p.h-(v-lov)/(hiv-lov)*p.h;
+    for(let t=0;t<=2;t++){const gv=lov+(hiv-lov)*t/2,yy=y(gv);svg.appendChild(E("line",{x1:padL,y1:yy,x2:W-padR,y2:yy,class:"grid-line"}));
+      svg.appendChild(E("text",{x:padL-6,y:yy+3,"text-anchor":"end",class:"tick"},fmt(gv)));}
+    svg.appendChild(E("text",{x:padL,y:p.y-9,class:"ptitle"},p.title));
+    series.forEach(s=>{let d="",st=false;DATA.forEach((o,i)=>{const v=s.get(o);if(v==null){st=false;return;}d+=(st?"L":"M")+px(i)+","+y(v)+" ";st=true;});
+      svg.appendChild(E("path",{d,class:s.cls}));
+      for(let i=n-1;i>=0;i--){const v=s.get(DATA[i]);if(v!=null){svg.appendChild(E("text",{x:px(i)+8,y:y(v)+3,class:"vlabel",fill:`var(${s.vc})`},s.lab));break;}}});}
+  panel(L.temp,[{get:d=>d.twc.temp,cls:"ln-twc",vc:"--twc",lab:"TWC"},{get:d=>d.rdps.temp,cls:"ln-rdps",vc:"--rdps",lab:"RDPS"}],v=>v.toFixed(0));
+  panel(L.wind,[{get:d=>d.twc.wspd,cls:"ln-twc",vc:"--twc",lab:"TWC"},{get:d=>d.rdps.wspd,cls:"ln-rdps",vc:"--rdps",lab:"RDPS"},{get:d=>d.rdps.gust,cls:"ln-gust",vc:"--gust",lab:"gust"}],v=>v.toFixed(0),true);
+  // direction arrows
+  svg.appendChild(E("text",{x:padL,y:L.aw.twc-8,class:"ptitle"},"Wind direction (arrow = toward)"));
+  [["twc",L.aw.twc],["rdps",L.aw.rdps]].forEach(([src,ry])=>{svg.appendChild(E("text",{x:padL-6,y:ry+4,"text-anchor":"end",class:"rowlab"},src.toUpperCase()));
+    DATA.forEach((d,i)=>{if(i%2!==0&&i!==n-1)return;const dir=d[src].wdir;if(dir==null)return;
+      const to=(dir+180)*Math.PI/180,ux=Math.sin(to),uy=-Math.cos(to),cx=px(i),len=6;const west=dir>=200&&dir<=340;
+      const col=west?"var(--red)":"var(--water)";
+      svg.appendChild(E("line",{x1:cx-ux*len,y1:ry-uy*len,x2:cx+ux*len,y2:ry+uy*len,class:"arrow",stroke:col}));
+      const a1=to+Math.PI*.82,a2=to-Math.PI*.82,hx=cx+ux*len,hy=ry+uy*len;
+      svg.appendChild(E("path",{d:`M${hx},${hy} L${hx+Math.sin(a1)*4},${hy-Math.cos(a1)*4} L${hx+Math.sin(a2)*4},${hy-Math.cos(a2)*4} Z`,fill:col}));});});
+  // conditions strip
+  const pb=L.strip.y+L.strip.h;svg.appendChild(E("text",{x:padL,y:L.strip.y-8,class:"ptitle"},"Sky & shower chance"));
+  DATA.forEach((d,i)=>{const pop=d.twc.pop||0,bh=pop/100*L.strip.h*.8,bw=(px(1)-px(0))*.5;
+    svg.appendChild(E("rect",{x:px(i)-bw/2,y:pb-bh,width:bw,height:bh,class:"popbar"}));
+    if(i%2===0)svg.appendChild(E("text",{x:px(i),y:L.strip.y+6,"text-anchor":"middle",class:"wx-emoji"},d.twc.emoji));});
+  // cloud
+  const cp=L.cloud,cy=v=>cp.y+cp.h-(v/100)*cp.h;svg.appendChild(E("text",{x:padL,y:cp.y-9,class:"ptitle"},cp.title));
+  [0,50,100].forEach(gv=>{svg.appendChild(E("line",{x1:padL,y1:cy(gv),x2:W-padR,y2:cy(gv),class:"grid-line"}));
+    svg.appendChild(E("text",{x:padL-6,y:cy(gv)+3,"text-anchor":"end",class:"tick"},gv));});
+  let area="M"+px(0)+","+(cp.y+cp.h)+" ",ln="";DATA.forEach((d,i)=>{const v=d.twc.cloud||0;area+="L"+px(i)+","+cy(v)+" ";ln+=(i?"L":"M")+px(i)+","+cy(v)+" ";});
+  area+="L"+px(n-1)+","+(cp.y+cp.h)+" Z";svg.appendChild(E("path",{d:area,class:"cloudfill"}));svg.appendChild(E("path",{d:ln,class:"cloudln"}));
+  const axY=cp.y+cp.h;svg.appendChild(E("line",{x1:padL,y1:axY,x2:W-padR,y2:axY,class:"axis-line"}));
+  DATA.forEach((d,i)=>{if(d.hour%3!==0)return;const h=d.hour,lab=(h===0?"12a":h<12?h+"a":h===12?"12p":(h-12)+"p");
+    svg.appendChild(E("text",{x:px(i),y:axY+16,"text-anchor":"middle",class:"tick"},lab));});
+})();
+
+document.getElementById("foot").innerHTML=
+  `<b>Method.</b> Flags are driven by <b>ECCC RDPS</b> sustained wind at the lake — `+
+  `The Weather Company hourly API and ECCC RDPS (run 2026-07-10 12Z, point-sampled and converted from m/s). `+
+  `Only <b>south-sector winds</b> are discounted for the local shadow; a down-the-course westerly earns a ⚠ regardless of speed. The Weather Company supplies sky, temperature and shower chance. `+
+  `Wave heights are a fetch-limited estimate (<code>scripts/quidi_vidi_waves.py</code>) at the 1.2 km turn. `+
+  `<b>Thresholds:</b> Green ≤20, Yellow 20–30, Red &gt;30 km/h sustained. About a day out — treat as an outlook and `+
+  `re-check as race day nears (HRDPS now covers Saturday). Not an official race-day decision.`;
+</script>
