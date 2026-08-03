@@ -229,8 +229,11 @@ def inject(final, rowing, run):
     if run:
         label = datetime.strptime(run, "%Y-%m-%dT%H:%M:%SZ").strftime("%Y-%m-%d %HZ")
         h = re.sub(r"run \d{4}-\d\d-\d\d \d\dZ", f"run {label}", h)
-    gen = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    h = re.sub(r"generated \d{4}-\d\d-\d\d", f"generated {gen}", h)
+    gen_dt = datetime.now(timezone.utc)
+    gen = gen_dt.strftime("%Y-%m-%d %H:%MZ")
+    h = re.sub(r"updated \d{4}-\d\d-\d\d \d\d:\d\dZ", f"updated {gen}", h)
+    h = re.sub(r'const GENERATED_AT = "[^"]*";',
+               f'const GENERATED_AT = "{gen_dt.strftime("%Y-%m-%dT%H:%M:%SZ")}";', h, count=1)
     open(HTML, "w").write(h)
     print(f"Wrote {HTML}, data/final.json, data/rowing.json")
 
