@@ -4,13 +4,16 @@ build.py — rebuild the Quidi Vidi regatta rowing flag outlook with fresh data.
 
 Pipeline:
   1. Fetch ECCC RDPS (temp, wind speed/dir, cloud, 1h precip) from GeoMet WMS
-     GetFeatureInfo at Quidi Vidi Lake, for a Friday-noon -> Sunday-midnight window.
+     GetFeatureInfo at Quidi Vidi Lake, for a window spanning LEAD_DAYS of
+     context plus the RACE_DAY_COUNT race days starting on RACE_WEEKDAY
+     (see config below — currently Wednesday + Thursday).
   2. Fetch The Weather Company hourly forecast (temp, sky phrase, POP, cloud) for
      the same point (used for sky, temperature and shower chance).
   3. Compute:
        - data/final.json : merged per-hour record (rdps + twc) for the technical meteogram
        - data/rowing.json: per-hour rowing metrics + Green/Yellow/Red flag
-  4. Inject both arrays into regatta_meteogram.html and refresh the run/date labels.
+  4. Inject ROW/DATA/REGATTA_DAYS into regatta_meteogram.html and refresh the
+     run/date labels. The page renders one tab per entry in REGATTA_DAYS.
 
 Run:   TWC_API_KEY=xxxxx  python build.py
 Deps:  standard library only (urllib, json, math, concurrent.futures).
@@ -32,6 +35,15 @@ LAT, LON   = 47.582, -52.685          # Quidi Vidi Lake
 NDT_OFFSET = timedelta(hours=2, minutes=30)   # NDT = UTC-2:30
 HTML       = os.path.join(os.path.dirname(__file__), "regatta_meteogram.html")
 DATA_DIR   = os.path.join(os.path.dirname(__file__), "data")
+
+# race window: RACE_WEEKDAY is the first race day (0=Mon .. 6=Sun); the page
+# covers RACE_DAY_COUNT consecutive days from there (e.g. Wed+Thu below), with
+# LEAD_DAYS of context fetched before the first race day for the charts.
+# Change these three if the committee moves race day(s), or switch RDPS_LAYERS
+# below to an HRDPS/other model source once one covers the race window.
+RACE_WEEKDAY   = 2   # Wednesday
+RACE_DAY_COUNT = 2   # Wednesday + Thursday
+LEAD_DAYS      = 1
 
 # course + rowability model
 AXIS_BEARING = 45.0     # start(SW) -> buoys(NE)
@@ -68,16 +80,17 @@ def geomet(layer, tiso=None):
     return None
 
 def fetch_rdps():
-    # window: from max(run start, Fri 12Z) through Sun 00Z, hourly
+    # window: from max(run start, first race day - LEAD_DAYS) through the end
+    # of the last race day, hourly.
     _, run = None, None
     val, run = geomet("RDPS_10km_WindSpeed_10m"), _run_seen.get("run")
     run_dt = datetime.strptime(run, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
-    # anchor on the Saturday of the run's week
-    sat = run_dt + timedelta((5 - run_dt.weekday()) % 7)   # next Saturday
-    start = max(run_dt, (sat - timedelta(hours=13))).replace(minute=0, second=0, microsecond=0)  # ~Fri 12Z rel
-    start = max(run_dt, datetime(sat.year, sat.month, sat.day, 0, tzinfo=timezone.utc) - timedelta(hours=12))
+    # anchor on the next occurrence of RACE_WEEKDAY
+    race0 = run_dt + timedelta((RACE_WEEKDAY - run_dt.weekday()) % 7)
+    race0_00z = datetime(race0.year, race0.month, race0.day, tzinfo=timezone.utc)
+    start = max(run_dt, race0_00z - timedelta(hours=24 * LEAD_DAYS + 12))
     start = start.replace(minute=0, second=0, microsecond=0)
-    end   = datetime(sat.year, sat.month, sat.day, 0, tzinfo=timezone.utc) + timedelta(hours=24)  # Sun 00Z
+    end   = race0_00z + timedelta(hours=24 * RACE_DAY_COUNT)  # through 00Z after the last race day
     times, t = [], start
     while t <= end:
         times.append(t.strftime("%Y-%m-%dT%H:%M:%SZ")); t += timedelta(hours=1)
@@ -197,6 +210,12 @@ def build(times, rdps, twc):
         rowing.append(o)
     return final, rowing
 
+def race_days(rowing):
+    """ISO dates (NDT calendar day) of the race days, in order."""
+    wanted = {(RACE_WEEKDAY + i) % 7 for i in range(RACE_DAY_COUNT)}
+    return sorted({o["dow"] for o in rowing
+                   if datetime.strptime(o["dow"], "%Y-%m-%d").weekday() in wanted})
+
 def inject(final, rowing, run):
     os.makedirs(DATA_DIR, exist_ok=True)
     json.dump(final,  open(os.path.join(DATA_DIR, "final.json"),  "w"), separators=(",", ":"))
@@ -204,6 +223,9 @@ def inject(final, rowing, run):
     h = open(HTML).read()
     h = re.sub(r"const ROW = \[.*?\];",  lambda m: "const ROW = "  + json.dumps(rowing, separators=(",",":")) + ";", h, count=1, flags=re.S)
     h = re.sub(r"const DATA = \[.*?\];", lambda m: "const DATA = " + json.dumps(final,  separators=(",",":")) + ";", h, count=1, flags=re.S)
+    h = re.sub(r"const REGATTA_DAYS = \[.*?\];",
+               lambda m: "const REGATTA_DAYS = " + json.dumps(race_days(rowing), separators=(",", ":")) + ";",
+               h, count=1, flags=re.S)
     if run:
         label = datetime.strptime(run, "%Y-%m-%dT%H:%M:%SZ").strftime("%Y-%m-%d %HZ")
         h = re.sub(r"run \d{4}-\d\d-\d\d \d\dZ", f"run {label}", h)
@@ -220,12 +242,13 @@ def main():
     twc = fetch_twc()
     final, rowing = build(times, rdps, twc)
     inject(final, rowing, run)
-    sat = [o for o in rowing if 6 <= o["hour"] <= 17 and o["dow"] == max({o2['dow'] for o2 in rowing})]
-    flags = {}
-    for o in rowing:
-        if 6 <= o["hour"] <= 17:
-            flags[o["flagLab"]] = flags.get(o["flagLab"], 0) + 1
-    print("Flag tally (all daytime hours):", flags)
+    days = race_days(rowing)
+    for d in days:
+        flags = {}
+        for o in rowing:
+            if o["dow"] == d and 6 <= o["hour"] <= 17:
+                flags[o["flagLab"]] = flags.get(o["flagLab"], 0) + 1
+        print(f"Flag tally {d} (daytime hours):", flags)
 
 if __name__ == "__main__":
     main()
