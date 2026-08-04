@@ -455,7 +455,7 @@ function renderDay(idx){
     `Forecast covers ${label} directly from the latest model run.`;
   const narrEl=document.getElementById("heroNarrative");
   const narr=TWC_NARRATIVE[day];
-  if(narr){ narrEl.style.display=""; narrEl.innerHTML=`<b>TWC's full-day outlook:</b> ${narr}`; }
+  if(narr){ narrEl.style.display=""; narrEl.innerHTML=`<b>SheerrWeather Outlook:</b> ${narr}`; }
   else{ narrEl.style.display="none"; narrEl.textContent=""; }
 
   sat.forEach(o=>{
