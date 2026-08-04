@@ -26,7 +26,7 @@ Design decisions baked in (from the committee's guidance):
     of due south) are discounted (lake sits in the lee); all other directions
     are taken at face value.
 """
-import json, math, os, re, sys, urllib.request, urllib.parse
+import json, math, os, re, sys, time, urllib.request, urllib.parse
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
 
@@ -84,8 +84,15 @@ def geomet(layer, tiso=None):
 def fetch_rdps():
     # window: from max(run start, first race day - LEAD_DAYS) through the end
     # of the last race day, hourly.
-    _, run = None, None
-    val, run = geomet("RDPS_10km_WindSpeed_10m"), _run_seen.get("run")
+    run = None
+    for attempt in range(4):
+        geomet("RDPS_10km_WindSpeed_10m")
+        run = _run_seen.get("run")
+        if run:
+            break
+        time.sleep(3 * (attempt + 1))  # transient GeoMet hiccups happen; retry before giving up
+    if not run:
+        sys.exit("GeoMet did not return a run reference time after 4 attempts; aborting.")
     run_dt = datetime.strptime(run, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
     # anchor on the next occurrence of RACE_WEEKDAY
     race0 = run_dt + timedelta((RACE_WEEKDAY - run_dt.weekday()) % 7)
