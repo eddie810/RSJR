@@ -120,6 +120,40 @@ def fetch_twc():
                        pop=tw["precipChance"][i], phrase=tw["wxPhraseLong"][i])
     return out
 
+def fetch_twc_daily():
+    """TWC's plain-language daily narrative, keyed by NDT calendar date.
+
+    Best-effort: the daily API's daypart arrays are day/night pairs per
+    calendar day, but the first pair is truncated to night-only once the
+    current time is past today's daytime cutoff -- so this is wrapped
+    defensively and just omits the narrative if the shape doesn't match
+    what's expected, rather than failing the whole build.
+    """
+    key = os.environ.get("TWC_API_KEY")
+    if not key:
+        return {}
+    url = (f"https://api.weather.com/v3/wx/forecast/daily/7day?geocode={LAT},{LON}"
+           f"&units=m&language=en-US&format=json&apiKey={key}")
+    try:
+        d = json.load(urllib.request.urlopen(url, timeout=40))
+        vtu = d["validTimeUtc"]
+        dp = d["daypart"][0]
+        names, narrs = dp.get("daypartName") or [], dp.get("narrative") or []
+        n_days = len(vtu)
+        day0_missing = len(names) == 2 * n_days - 1
+        out = {}
+        for i, vt in enumerate(vtu):
+            if i == 0 and day0_missing:
+                continue  # today's "day" narrative already elapsed -- only "tonight" exists
+            idx = (2 * i - 1) if day0_missing else (2 * i)
+            if 0 <= idx < len(narrs) and narrs[idx]:
+                date = (datetime.fromtimestamp(vt, tz=timezone.utc) - NDT_OFFSET).strftime("%Y-%m-%d")
+                out[date] = narrs[idx]
+        return out
+    except Exception as e:
+        print(f"  (TWC daily narrative unavailable: {e})")
+        return {}
+
 def emoji(p):
     p = (p or "").lower()
     if "thunder" in p: return "⛈️"
@@ -218,7 +252,7 @@ def race_days(rowing):
     return sorted({o["dow"] for o in rowing
                    if datetime.strptime(o["dow"], "%Y-%m-%d").weekday() in wanted})
 
-def inject(final, rowing, run):
+def inject(final, rowing, run, twc_daily=None):
     os.makedirs(DATA_DIR, exist_ok=True)
     json.dump(final,  open(os.path.join(DATA_DIR, "final.json"),  "w"), separators=(",", ":"))
     json.dump(rowing, open(os.path.join(DATA_DIR, "rowing.json"), "w"), separators=(",", ":"))
@@ -227,6 +261,9 @@ def inject(final, rowing, run):
     h = re.sub(r"const DATA = \[.*?\];", lambda m: "const DATA = " + json.dumps(final,  separators=(",",":")) + ";", h, count=1, flags=re.S)
     h = re.sub(r"const REGATTA_DAYS = \[.*?\];",
                lambda m: "const REGATTA_DAYS = " + json.dumps(race_days(rowing), separators=(",", ":")) + ";",
+               h, count=1, flags=re.S)
+    h = re.sub(r"const TWC_NARRATIVE = \{.*?\};",
+               lambda m: "const TWC_NARRATIVE = " + json.dumps(twc_daily or {}, separators=(",", ":")) + ";",
                h, count=1, flags=re.S)
     if run:
         label = datetime.strptime(run, "%Y-%m-%dT%H:%M:%SZ").strftime("%Y-%m-%d %HZ")
@@ -245,8 +282,9 @@ def main():
     print(f"  run {run}, {len(times)} hourly steps")
     print("Fetching TWC ...")
     twc = fetch_twc()
+    twc_daily = fetch_twc_daily()
     final, rowing = build(times, rdps, twc)
-    inject(final, rowing, run)
+    inject(final, rowing, run, twc_daily)
     days = race_days(rowing)
     for d in days:
         flags = {}
