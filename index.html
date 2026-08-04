@@ -279,7 +279,7 @@
     <div class="legend">
       <span class="i"><span class="ln" style="border-color:var(--twc)"></span>TWC</span>
       <span class="i"><span class="ln" style="border-color:var(--rdps)"></span>RDPS</span>
-      <span class="i"><span class="ln d" style="border-color:var(--gust)"></span>gust (est. ×1.5)</span>
+      <span class="i"><span class="ln d" style="border-color:var(--gust)"></span>RDPS gust</span>
     </div>
   </details>
 
@@ -599,7 +599,7 @@ document.getElementById("courselab").innerHTML=
 document.getElementById("foot").innerHTML=
   `<b>Method.</b> Flags are driven by <b>ECCC RDPS</b> sustained wind at the lake — `+
   `The Weather Company hourly API and ECCC RDPS (run 2026-08-04 12Z, point-sampled and converted from m/s). `+
-  `Only <b>south-sector winds</b> are discounted for the local shadow; a down-the-course westerly earns a ⚠ regardless of speed. Gusts (G##) are RDPS's estimated gust factor (sustained ×1.5, or TWC's reported gust where available) with the same south-shadow correction applied. The Weather Company supplies sky, temperature and shower chance. `+
+  `Only <b>south-sector winds</b> are discounted for the local shadow; a down-the-course westerly earns a ⚠ regardless of speed. Gusts (G##) are RDPS's own forecast wind gust field (not an estimate), with the same south-shadow correction applied. The Weather Company supplies sky, temperature and shower chance. `+
   `Wave heights are a fetch-limited estimate (<code>scripts/quidi_vidi_waves.py</code>) at the 1.2 km turn. `+
   `<b>Thresholds:</b> Green ≤20, Yellow 20–30, Red &gt;30 km/h sustained. About a day out — treat as an outlook and `+
   `re-check as race day nears (HRDPS now covers ${DAY_META.map(d=>d.label).join(" & ")}). Not an official race-day decision.`;

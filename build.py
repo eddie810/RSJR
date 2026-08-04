@@ -50,13 +50,14 @@ AXIS_BEARING = 45.0     # start(SW) -> buoys(NE)
 CROSS_FETCH  = 300.0    # m, effective cross-axis fetch
 BUOYS_FETCH  = 1200.0   # m, fetch to the far turn
 G            = 9.81
-GUST_FACTOR  = 1.5      # estimated gust = sustained * GUST_FACTOR (matches the technical meteogram's RDPS gust line)
+GUST_FACTOR  = 1.5      # fallback only, used if RDPS's own gust layer (RDPS_10km_WindGust-Max_10m) is unavailable for an hour
 
 GEOMET = "https://geo.weather.gc.ca/geomet"
 RDPS_LAYERS = {
     "temp":     "RDPS_10km_AirTemp_2m",
     "wspd":     "RDPS_10km_WindSpeed_10m",
     "wdir":     "RDPS_10km_WindDir_10m",
+    "gust":     "RDPS_10km_WindGust-Max_10m",
     "cloud":    "RDPS_10km_TotalCloudCover",
     "precip1h": "RDPS_10km_Precip-Accum1h",
 }
@@ -221,12 +222,13 @@ def build(times, rdps, twc):
         r = rdps[ts]; t = twc.get(ts, {})
         lo = datetime.strptime(ts, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc) - NDT_OFFSET
         spd = r["wspd"] * 3.6 if r["wspd"] is not None else None
+        gust = r["gust"] * 3.6 if r["gust"] is not None else (spd * GUST_FACTOR if spd is not None else None)
         final.append({
             "utc": ts, "ndt": lo.strftime("%Y-%m-%dT%H:%M"), "day": lo.strftime("%a"),
             "hour": lo.hour, "dow": lo.strftime("%Y-%m-%d"),
             "rdps": {"temp": round(r["temp"],1) if r["temp"] is not None else None,
                      "wspd": round(spd,1) if spd is not None else None,
-                     "gust": round(spd*1.5,1) if spd is not None else None,
+                     "gust": round(gust,1) if gust is not None else None,
                      "wdir": round(r["wdir"]) if r["wdir"] is not None else None,
                      "cloud": r["cloud"], "wx": wxcls(r["cloud"], r["precip1h"])},
             "twc": {"temp": t.get("temp"), "wspd": t.get("wspd"), "gust": t.get("gust"),
