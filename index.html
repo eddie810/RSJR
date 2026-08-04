@@ -327,6 +327,10 @@ function raceCardFromRow(o){
   const R=o.rdps;
   return {spd:R.adj, gust:R.gust, dir:R.dir, card:o.dir_card, rel:R.rel, downdc:o.downdc, flag:o.flag, interpolated:false};
 }
+function raceTimeLabel(hh,mm){
+  const ap=hh>=12?"PM":"AM", h12=((hh+11)%12)+1;
+  return `${h12}:${String(mm).padStart(2,"0")} ${ap} NDT`;
+}
 function raceCardAt(dayRows, hh, mm){
   const exact=dayRows.find(o=>o.hour===hh);
   if(exact && mm===30) return raceCardFromRow(exact);
@@ -340,14 +344,14 @@ function raceCardAt(dayRows, hh, mm){
   const rel=spd<3?"calm":(Math.abs(along)>=cross?(along>0?"down-course":"up-course"):"cross-course");
   const downdc=rel==="down-course"&&spd>=15;
   return {spd:Math.round(spd), gust:Math.round(gust), dir:Math.round(dir), card:compass(dir), rel, downdc,
-          flag:raceFlagOf(spd), interpolated:true};
+          flag:raceFlagOf(spd), interpolated:true, bracket:[beforeH,afterH]};
 }
 function renderRaceCards(dayRows){
   const grid=document.getElementById("racegrid"); if(!grid)return; grid.innerHTML="";
-  const races=[{label:"Championship Race 1",hh:6,mm:30},{label:"Championship Race 2",hh:7,mm:0}];
+  const races=[{label:"Championship Race 1",hh:18,mm:30},{label:"Championship Race 2",hh:19,mm:0}];
   races.forEach(r=>{
     const d=raceCardAt(dayRows, r.hh, r.mm);
-    const time=`${String(r.hh).padStart(2,"0")}:${String(r.mm).padStart(2,"0")} NDT`;
+    const time=raceTimeLabel(r.hh, r.mm);
     const card=document.createElement("div");
     if(!d){
       card.className="racecard";
@@ -357,10 +361,13 @@ function renderRaceCards(dayRows){
     }
     const relShortTxt=d.rel==="down-course"?"↓ course":d.rel==="up-course"?"↑ course":d.rel==="cross-course"?"cross":d.rel;
     card.className="racecard "+d.flag;
+    const note=d.interpolated
+      ? `Interpolated between the ${raceTimeLabel(d.bracket[0],30)}–${raceTimeLabel(d.bracket[1],30)} model hours.`
+      : "Direct hourly model read.";
     card.innerHTML=`<div class="lamp2 ${d.flag}"><span>${d.flag.toUpperCase()}</span></div>`+
       `<div><div class="rlabel">${r.label}</div><div class="rtime">${time}</div>`+
       `<div class="rstats"><b>${d.spd} km/h</b> · G${d.gust} · ${d.card} · ${relShortTxt}${d.downdc?" · ⚠ down course":""}</div>`+
-      `<div class="rnote">${d.interpolated?"Interpolated between the 06:30–07:30 model hours.":"Direct hourly model read."}</div></div>`;
+      `<div class="rnote">${note}</div></div>`;
     grid.appendChild(card);
   });
 }
@@ -392,7 +399,7 @@ const DAY_META=REGATTA_DAYS.map(d=>({date:d,label:new Date(d+"T12:00:00Z").toLoc
 let activeDay=0;
 
 function dayWorst(idx){
-  const rows=ROW.filter(o=>o.dow===REGATTA_DAYS[idx]&&o.hour>=6&&o.hour<=17);
+  const rows=ROW.filter(o=>o.dow===REGATTA_DAYS[idx]&&o.hour>=8&&o.hour<=17);
   const flags=rows.map(o=>o.flag);
   return flags.includes("red")?"red":flags.includes("yellow")?"yellow":"green";
 }
@@ -410,7 +417,8 @@ function renderTabs(){
 }
 function renderDay(idx){
   const day=REGATTA_DAYS[idx], label=DAY_META[idx].label;
-  const sat=ROW.filter(o=>o.dow===day&&o.hour>=6&&o.hour<=17);
+  const dayRows=ROW.filter(o=>o.dow===day);
+  const sat=dayRows.filter(o=>o.hour>=8&&o.hour<=17);
   document.getElementById("tlDayLabel").textContent=label;
   const tl=document.getElementById("timeline"); tl.innerHTML="";
   if(!sat.length){
@@ -420,10 +428,10 @@ function renderDay(idx){
     document.getElementById("heroBig").textContent="No data yet for "+label;
     document.getElementById("heroText").textContent="This day isn’t covered by the current model run yet — check back closer to race day.";
     document.getElementById("heroCaveat").textContent="";
-    renderRaceCards([]);
+    renderRaceCards(dayRows);
     return;
   }
-  renderRaceCards(sat);
+  renderRaceCards(dayRows);
   const flags=sat.map(o=>o.flag);
   const worst=flags.includes("red")?"red":flags.includes("yellow")?"yellow":"green";
   const lo=Math.min(...sat.map(o=>o.adj_worst)), hi=Math.max(...sat.map(o=>o.adj_worst));
@@ -615,6 +623,8 @@ document.getElementById("foot").innerHTML=
       a:()=>`${DAY_META[activeDay].label}'s flag is currently <b>${dayWorst(activeDay).toUpperCase()}</b>. Tap the tabs above the timeline to check the other race day.`},
     {q:"Which days does this cover?", kw:["which day","what day","race day","when is the regatta","days does"],
       a:()=>`This page covers <b>${DAY_META.map(d=>d.label).join(" and ")}</b> — use the tabs to switch between them.`},
+    {q:"When do the championship races start?", kw:["championship","start time","6:30","7:00","what time do","final"],
+      a:()=>`The championship finals start at <b>6:30 PM and 7:00 PM NDT</b> — see the two spotlight cards above the hourly grid for conditions right at those start times. General racing runs 8am–5pm.`},
     {q:"What timezone are the times in?", kw:["timezone","time zone","ndt","what time","local time"],
       a:()=>`All times shown are <b>Newfoundland Daylight (NDT, UTC−2:30)</b>.`},
     {q:"Why is south wind treated differently?", kw:["south","shadow","discount"],

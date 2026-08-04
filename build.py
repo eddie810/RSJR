@@ -298,7 +298,7 @@ def main():
     for d in days:
         flags = {}
         for o in rowing:
-            if o["dow"] == d and 6 <= o["hour"] <= 17:
+            if o["dow"] == d and 8 <= o["hour"] <= 17:
                 flags[o["flagLab"]] = flags.get(o["flagLab"], 0) + 1
         print(f"Flag tally {d} (daytime hours):", flags)
 
